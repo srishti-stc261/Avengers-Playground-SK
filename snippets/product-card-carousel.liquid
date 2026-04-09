@@ -1,0 +1,127 @@
+-{%- assign onboarding = false -%}
+{%- if product == blank or product.id == empty -%}
+  {%- assign onboarding = true -%}
+{%- endif -%}
+
+{%- assign variant_to_link = product.selected_or_first_available_variant -%}
+{%- if variant_to_link == blank and product.variants.size > 0 -%}
+  {%- assign variant_to_link = product.variants.first -%}
+{%- endif -%}
+
+{%- comment -%} pick an image {%- endcomment -%}
+{%- assign featured_img = '' -%}
+{%- if product.featured_media and product.featured_media.preview_image -%}
+  {%- assign featured_img = product.featured_media.preview_image -%}
+{%- elsif product.featured_image -%}
+  {%- assign featured_img = product.featured_image -%}
+{%- endif -%}
+
+<div class="ps-card" data-product-id="{{ product.id }}" aria-hidden="{% if onboarding %}true{% else %}false{% endif %}">
+  <div class="ps-card-media">
+    {% unless onboarding %}
+      <a
+        class="ps-image-link"
+        href="{% if variant_to_link != blank %}{{ variant_to_link.url }}{% else %}{{ product.url }}{% endif %}"
+      >
+        {% if featured_img != '' %}
+          <img
+            src="{{ featured_img | image_url: width: 800 }}"
+            alt="{{ product.title }}"
+            loading="lazy"
+            class="ps-image"
+          >
+        {% else %}
+          <div class="ps-placeholder" aria-hidden="true">No image</div>
+        {% endif %}
+      </a>
+    {% else %}
+      <div class="ps-placeholder">Loading…</div>
+    {% endunless %}
+  </div>
+
+  <div class="ps-card-body">
+    {% unless onboarding %}
+      <h3 class="ps-title">
+        <a href="{% if variant_to_link != blank %}{{ variant_to_link.url }}{% else %}{{ product.url }}{% endif %}">
+          {{- product.title | escape -}}
+        </a>
+      </h3>
+
+      <div class="ps-meta">
+        {% if product.price_varies %}
+          <span class="ps-from">From</span>
+        {% endif %}
+        <span class="ps-price money">{{ product.price | money }}</span>
+      </div>
+
+      <form method="post" action="/cart/add" class="ps-addtocart" data-product-id="{{ product.id }}">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        <button type="submit" class="ps-btn-add" aria-label="Add {{ product.title }}">Add to bag</button>
+      </form>
+    {% else %}
+      <div class="ps-loading-text">Product placeholder</div>
+    {% endunless %}
+  </div>
+</div>
+
+<style>
+  /* Minimal styles for quick testing — move to assets/best-sellers.css later */
+  .ps-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .ps-card-media {
+    background: #f6f6f6;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ps-image {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  .ps-placeholder {
+    width: 100%;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+  }
+  .ps-card-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ps-title {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+  }
+  .ps-meta {
+    font-weight: 700;
+    margin-top: auto;
+  }
+  .ps-btn-add {
+    background: #222;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  @media (max-width: 767px) {
+    .ps-image {
+      height: 180px;
+    }
+  }
+</style>

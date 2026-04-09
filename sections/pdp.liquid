@@ -1,0 +1,32 @@
+{% comment %}
+  This is a minimal test section to confirm if new sections render in the Theme Customizer.
+{% endcomment %}
+
+<section style="padding:40px; background:#fce4ec; border:2px solid #e91e63;">
+  <h1 style="margin:0; font-size:28px; color:#e91e63;">
+    ✅ Test Section Loaded Successfully!
+  </h1>
+  <p style="margin-top:10px; font-size:16px;">
+    If you can see this section in Customizer, your theme is loading custom sections correctly.
+  </p>
+</section>
+
+{% schema %}
+{
+  "name": "Demo Test Section",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "test_text",
+      "label": "Testing text",
+      "default": "This is a test setting"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Demo Test Section"
+    }
+  ]
+}
+{% endschema %}

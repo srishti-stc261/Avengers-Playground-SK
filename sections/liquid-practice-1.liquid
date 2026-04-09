@@ -1,0 +1,30 @@
+<div class="container page-width">
+<h1>{{ section.settings.heading }}</h1>
+<h2>shop name: {{shop.name}}</h2>
+
+{% if product %}
+    <h2>{{ product.title }}</h2>
+{% endif %}
+</div>
+
+{% schema  %}  
+{
+    "name":"Liquid Practice 1",
+    "settings":[
+        {
+            "type":"text",
+            "id":"heading",
+            "label":"Heading"
+        }
+        
+        
+    ],
+    "presets": [
+        {
+            "name": "Liquid Practice 1",
+            "category": "Custom"
+        }
+    ]
+}
+
+{% endschema %}

@@ -1,0 +1,88 @@
+<style>
+    .section-container{
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    .cards-wrapper{
+        display: flex;
+        justify-content: flex-start; /* left align the row */
+        align-items: stretch; /* make cards equal height */
+        gap: 1rem; /* spacing between cards */
+        flex-wrap: wrap; /* allow wrapping on small screens */
+    }
+
+    .cards-wrapper .card {
+        box-sizing: border-box;
+        flex: 0 0 calc(25% - 1rem); /* 4 columns - adjust as needed */
+        padding: 0;
+    }
+
+    .cards-wrapper .card img{
+        width: 100%;
+        height: 180px; /* adjust height as desired */
+        object-fit: cover; /* crop to fill card */
+        display: block;
+    }
+
+    .cards-wrapper .card p{
+        margin: 0.5rem 0 0;
+    }
+
+    /* Responsive: 2 columns on small screens */
+    @media (max-width: 768px){
+        .cards-wrapper .card{ flex: 0 0 calc(50% - 1rem); }   
+    }
+    
+</style>
+
+<div class="section-container">
+    <h2>{{section.settings.Section_title}}</h2>
+    <div class="cards-wrapper">
+        {% for block in section.blocks %}
+            <div class="card">
+                {% if block.settings.card_image %}
+                    <img src="{{ block.settings.card_image | img_url: 'medium' }}" alt="{{ block.settings.card_text }}">
+                {% endif %}
+                {% if block.settings.card_text %}
+                    <p>{{ block.settings.card_text }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Blog Section",
+    "settings": [
+        {
+            "type":"text",
+            "id":"Section_title",
+            "label":"Section Title"
+        }
+        ],
+        "blocks": [
+      {
+        "type":"image-card",
+        "name":"Image Card",
+        "settings":[
+            {
+                "type":"image_picker",
+                "id":"card_image",
+                "label":"Card Image"
+            },
+            {
+                "type":"text",
+                "id":"card_text",
+                "label":"Card Text"
+            }
+        ]
+      }
+        ],
+        "presets": [{
+            "name":"New Section"
+        }]
+        
+}
+{% endschema %}

@@ -1,0 +1,492 @@
+<style>
+ 
+   {% comment %} SECTION & BASIC LAYOUT {% endcomment %}
+  .best-sellers-section {
+    padding: 40px 0;
+    box-sizing: border-box;
+  }
+  .best-sellers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .best-sellers-title h2 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .best-sellers-title .subtitle {
+    color: #666;
+    margin-top: 6px;
+  }
+
+ 
+   {% comment %} SLIDER CARD LAYOUT {% endcomment %}
+ 
+  .best-sellers-swiper {
+    padding-bottom: 8px;
+  }
+  .best-sellers-swiper .swiper-wrapper {
+    align-items: stretch;
+  }
+  .best-sellers-swiper .swiper-slide {
+    width: auto !important;
+    display: flex;
+    align-items: stretch;
+    padding: unset;
+    box-sizing: border-box;
+  }
+  .ps-card {
+    width: 100%;
+    height: 100%;
+  }
+
+   {% comment %} TABS PILL UI {% endcomment %}
+   
+  .gender-tabs {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    width: 360px;
+    max-width: 100%;
+    padding: 8px;
+    border: 1px solid #e9e9e9;
+    border-radius: 24px;
+    background: #fff;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  /* sliding dark inner pill */
+  .gender-tabs::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: calc(50% - 16px);
+    background: linear-gradient(180deg, #454545, #1f1f1f);
+    border-radius: 12px;
+    box-shadow: 0 8px 22px rgba(31, 31, 31, 0.18);
+    transition: left 0.35s cubic-bezier(0, 0, 0.3, 1), width 0.2s;
+    z-index: 1;
+  }
+  .gender-tabs[data-active='women']::before {
+    left: calc(50% + 8px);
+  }
+
+  /* buttons on top of pill */
+  .gender-tab {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border: 0;
+    padding: 10px 28px;
+    font-size: 16px;
+    text-align: center;
+    color: #222;
+    cursor: pointer;
+    font-weight: 600;
+    outline: none;
+    width: 100%;
+  }
+  .gender-tab.active {
+    color: #fff;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: black !important;
+  }
+
+ 
+   {% comment %} PRODUCT CARD ANIMATION {% endcomment %}
+  
+  @keyframes product_card_animation {
+    0% {
+      opacity: 0;
+      transform: scale(0.96) translateY(18px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  .best-sellers-swiper.fade-in .swiper-slide,
+  .best-sellers-swiper.fade-in .ps-card {
+    animation-name: product_card_animation;
+    animation-duration: 0.65s;
+    animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+    animation-fill-mode: forwards;
+  }
+
+  
+   {% comment %} FOOTER: PAGINATION + ARROWS {% endcomment %}
+
+  .swiper-footer-controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 14px;
+    box-sizing: border-box;
+    padding-inline: 12px;
+  }
+
+  /* pagination centered */
+  .swiper-footer-controls .swiper-pagination {
+    order: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    margin: 0;
+  }
+
+  /* arrows group */
+  .swiper-nav-buttons {
+    order: 2;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* base button */
+  .navigation_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    padding: 0;
+    box-sizing: border-box;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s;
+  }
+
+  /* next (dark pill) */
+  .swiper-button-next.navigation_btn {
+    background: linear-gradient(180deg, #4b4b4b, #1f1f1f);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+    border: none;
+  }
+  .swiper-button-next.navigation_btn svg path {
+    fill: #fff;
+  }
+
+  .swiper-button-prev.navigation_btn svg path {
+    fill: #fff;
+  }
+
+  /* prev (outlined light) */
+  .swiper-button-prev.navigation_btn {
+    background: linear-gradient(180deg, #4b4b4b, #1f1f1f);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  }
+
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
+    content: 'none' !important;
+  }
+
+  /* disable default Swiper absolute positioning */
+  .swiper-button-next,
+  .swiper-button-prev {
+    position: static !important;
+    margin: 0 !important;
+  }
+
+  /* small screens */
+  @media (max-width: 480px) {
+    .gender-tabs {
+      width: 260px;
+      padding: 6px;
+    }
+    .gender-tabs::before {
+      top: 6px;
+      bottom: 6px;
+      left: 6px;
+      width: calc(50% - 12px);
+    }
+    .gender-tabs[data-active='women']::before {
+      left: calc(50% + 6px);
+    }
+    .gender-tab {
+      padding: 8px 10px;
+      font-size: 15px;
+    }
+    .navigation_btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+    }
+    .swiper-footer-controls {
+      gap: 10px;
+      padding-inline: 8px;
+    }
+
+    .best-sellers-header {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .best-sellers-header .subtitle {
+      text-align: center;
+    }
+
+    .swiper-nav-buttons {
+      display: none;
+    }
+  }
+</style>
+
+<section class="best-sellers-section section">
+  <!-- optional external css file -->
+  <link href="{{ 'best-sellers.css' | asset_url }}" rel="stylesheet">
+
+  <div class="page-width">
+    <div class="best-sellers-header">
+      <div class="best-sellers-title">
+        <h2>{{ section.settings.title }}</h2>
+          {% if section.settings.subtitle != blank %}
+          <p class="subtitle">{{ section.settings.subtitle }}</p>
+          {% endif %}
+      </div>
+
+      <div class="best-sellers-tabs" role="tablist" aria-label="Best sellers categories">
+        {% if section.settings.show_gender_tabs %}
+          <div class="gender-tabs" id="genderTabs" data-active="men" role="tablist">
+            <button class="gender-tab active" data-tab="men" role="tab" aria-selected="true">Men</button>
+            <button class="gender-tab" data-tab="women" role="tab" aria-selected="false">Women</button>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Swiper container -->
+    <div class="swiper best-sellers-swiper" aria-label="Best sellers carousel">
+      <div class="swiper-wrapper" id="bs-wrapper">
+        <!-- injected from templates by JS -->
+      </div> 
+
+      <!-- footer with pagination and arrows -->
+      <div class="swiper-footer-controls">
+        <div class="swiper-pagination" aria-hidden="false"></div>
+
+        <div class="swiper-nav-buttons" aria-hidden="false">
+          <!-- prev button (SVG inside) -->
+          <div class="swiper-button-prev navigation_btn" aria-label="Previous slide" role="button" tabindex="0">
+            <svg width="9" height="14" viewBox="0 0 9 14" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.57228 0.415497C7.03091 0.0017125 7.75973 0.00852947 8.21103 0.429154C8.66088 0.851119 8.66821 1.53256 8.22564 1.96137L3.20858 6.65089L8.22414 11.3404H8.2256C8.45053 11.5439 8.57906 11.8238 8.58198 12.1175C8.5849 12.4097 8.46075 12.6924 8.24021 12.9C8.0182 13.1062 7.71588 13.2223 7.4033 13.2195C7.08928 13.2168 6.78987 13.0966 6.57222 12.8863L0.729949 7.42383C0.274234 6.99638 0.274234 6.30539 0.729949 5.87794L6.57228 0.415497Z"/>
+            </svg>
+          </div>
+
+          <!-- next button (SVG inside) -->
+          <div class="swiper-button-next navigation_btn" aria-label="Next slide" role="button" tabindex="0">
+            <svg width="8" height="13" viewBox="0 0 8 13" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.1994 12.1345C1.78663 12.4965 1.1307 12.4906 0.724524 12.1225C0.319663 11.7533 0.313068 11.1571 0.711379 10.7818L5.22673 6.67852L0.712724 2.57519H0.71141C0.508976 2.39715 0.393299 2.1522 0.39067 1.89527C0.388041 1.63956 0.499776 1.39222 0.698266 1.21058C0.898071 1.03015 1.17016 0.928577 1.45149 0.93097C1.7341 0.933359 2.00357 1.03851 2.19946 1.22253L7.4575 6.0022C7.86764 6.37622 7.86764 6.98083 7.4575 7.35485L2.1994 12.1345Z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Pre-render men/women templates {%- endcomment -%}
+  {% assign coll_men = collections[section.settings.collection_men] %}
+  <template id="tmpl-men">
+    {% if coll_men and coll_men.products_count > 0 %}
+      {% for product in coll_men.products %}
+        <div class="swiper-slide">
+          {% render 'product-card-carousel', product: product %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="swiper-slide"><div class="ps-card">No products found.</div></div>
+    {% endif %}
+  </template>
+
+  {% assign coll_women = collections[section.settings.collection_women] %}
+  <template id="tmpl-women">
+    {% if coll_women and coll_women.products_count > 0 %}
+      {% for product in coll_women.products %}
+        <div class="swiper-slide">
+          {% render 'product-card-carousel', product: product %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="swiper-slide"><div class="ps-card">No products found.</div></div>
+    {% endif %}
+  </template>
+
+  <!-- Swiper CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper@9/swiper-bundle.min.css">
+  <script src="https://unpkg.com/swiper@9/swiper-bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var slidesDesktop = parseInt({{ section.settings.slides_desktop | json }}) || 4;
+      var slidesTablet = parseInt({{ section.settings.slides_tablet | json }}) || 3;
+      var slidesMobile = parseInt({{ section.settings.slides_mobile | json }}) || 2;
+      var spaceBetween = 24;
+
+      var wrapper = document.getElementById('bs-wrapper');
+      var swiperContainer = document.querySelector('.best-sellers-swiper');
+      var tmplMen = document.getElementById('tmpl-men');
+      var tmplWomen = document.getElementById('tmpl-women');
+      var genderTabs = document.getElementById('genderTabs');
+
+      var swiperInstance = null;
+
+      function initSwiper() {
+        // destroy previous instance (if exists)
+        if (swiperInstance && typeof swiperInstance.destroy === 'function') {
+          try { swiperInstance.destroy(true, true); } catch (e) { console.warn(e); }
+          swiperInstance = null;
+        }
+
+        // init Swiper with observer and pagination config
+        swiperInstance = new Swiper(swiperContainer, {
+          slidesPerView:4,
+          spaceBetween: 24,
+          autoHeight: true,
+          grabCursor: true,
+          loop: false,
+          observer: true,
+          observeParents: true,
+          observeSlideChildren: true,
+          navigation: {
+            nextEl: swiperContainer.querySelector('.swiper-footer-controls .swiper-button-next'),
+            prevEl: swiperContainer.querySelector('.swiper-footer-controls .swiper-button-prev'),
+          },
+          pagination: {
+            el: swiperContainer.querySelector('.swiper-footer-controls .swiper-pagination'),
+            clickable: true
+            {% comment %} renderBullet: function (index, className) {
+              return '<span class="' + className + '"></span>';
+            } {% endcomment %}
+          },
+
+         breakpoints: {
+         1024: { slidesPerView: 4, spaceBetween: 24 },
+         768:  { slidesPerView: 3, spaceBetween: 20 },
+         480:  { slidesPerView: 2, spaceBetween: 12 },
+         0:    { slidesPerView: 2, spaceBetween: 8 }  
+        }
+
+        });
+
+        // tiny delay to allow images / layout to settle, then force updates
+        setTimeout(function () {
+          try {
+            swiperInstance.update();
+            if (swiperInstance.pagination && typeof swiperInstance.pagination.render === 'function') {
+              swiperInstance.pagination.render();
+              swiperInstance.pagination.update();
+            }
+          } catch (err) {
+            console.warn('Swiper update/pagination error', err);
+          }
+        }, 60);
+      }
+
+      function showTemplate(templateElement) {
+        if (!templateElement) return;
+        wrapper.innerHTML = templateElement.innerHTML;
+
+        // trigger animation class, init swiper and remove class after animation
+        swiperContainer.classList.add('fade-in');
+        initSwiper();
+        setTimeout(function () { swiperContainer.classList.remove('fade-in'); }, 700);
+      }
+
+      // initial load -> men
+      showTemplate(tmplMen);
+
+      // tabs click -> switch
+      if (genderTabs) {
+        var tabs = genderTabs.querySelectorAll('.gender-tab');
+        tabs.forEach(function (btn) {
+          btn.setAttribute('role', 'tab');
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            // update UI active
+            tabs.forEach(function (t) { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            btn.classList.add('active'); btn.setAttribute('aria-selected', 'true');
+
+            // set pill position
+            var key = btn.dataset.tab || 'men';
+            genderTabs.setAttribute('data-active', key);
+
+            // switch templates
+            if (key === 'men') showTemplate(tmplMen);
+            else showTemplate(tmplWomen);
+          });
+        });
+      }
+    });
+
+   
+  </script>
+
+  {% schema %}
+{
+  "name": "Best Sellers Carousel",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "BEST SELLERS" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Most Loved Styles" },
+
+    { "type": "collection", "id": "collection_men", "label": "Collection - Men" },
+    { "type": "collection", "id": "collection_women", "label": "Collection - Women" },
+
+    { "type": "number", "id": "limit", "label": "Max products", "default": 8 },
+
+    {
+      "type": "select",
+      "id": "slides_desktop",
+      "label": "Slides desktop",
+      "options": [
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "slides_tablet",
+      "label": "Slides tablet",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "slides_mobile",
+      "label": "Slides mobile",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "1", "label": "1" }
+      ],
+      "default": "2"
+    },
+
+    { "type": "checkbox", "id": "show_gender_tabs", "label": "Show gender tabs", "default": true }
+  ],
+  "presets": [{ "name": "Best Sellers Carousel", "category": "Custom" }]
+}
+  {% endschema %}
+</section>

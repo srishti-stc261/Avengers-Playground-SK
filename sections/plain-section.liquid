@@ -1,0 +1,155 @@
+<style>
+.section-plain {
+    text-align: center;
+    padding: 20px;
+    position: relative;
+}
+
+.section-plain img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+}
+
+.section-plain__media { 
+    position: relative; 
+    display: block; 
+  }
+
+.section-plain__media img { 
+    display: block; 
+    width: 100%; 
+    height: auto; 
+    margin: 0; 
+}
+
+
+.section-plain__media .buttons {
+    position: absolute;
+    top: 80%;
+    left: 35%;
+    right: 41%;
+}
+
+
+.section-plain__media .buttons a {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 12px;
+    background-color: black;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    z-index: 5;
+    font-size: 13px;
+}
+
+/* left and right placement */
+.section-plain__media .buttons a:first-child { left: 1rem; }
+.section-plain__media .buttons a:last-child { right: 1rem; }
+
+@media (max-width:720px) {
+    .section-plain__media .buttons a:first-child {
+         left: -2rem;
+          }
+    .section-plain__media .buttons a:last-child { 
+        right: -5rem; }
+}
+
+
+
+</style>
+
+<div class="section-plain">
+{% if section.settings.heading %}
+    <h2>{{section.settings.heading}}</h2>
+{% endif %}
+
+{% if section.settings.image %}
+  <div class="section-plain__media">
+    <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.heading }}">
+
+    <div class="buttons">
+      {% if section.settings.button_1 %}
+        {% assign wa_number = section.settings.button_1_whatsapp_number %}
+        {% if wa_number != blank %}
+          {% assign wa_msg = section.settings.button_1_whatsapp_message | default: '' %}
+          {% assign wa_href = 'https://wa.me/' | append: wa_number %}
+          {% if wa_msg != '' %}
+            {% capture wa_encoded_msg %}{{ wa_msg | url_encode }}{% endcapture %}
+            {% assign wa_href = wa_href | append: '?text=' | append: wa_encoded_msg %}
+          {% endif %}
+          <a href="{{ wa_href }}" target="_blank" rel="noopener" aria-label="{{ section.settings.button_1 }} (opens in WhatsApp)">{{ section.settings.button_1 }}</a>
+        {% else %}
+          <a href="{{ section.settings.button_1_link }}" target="_blank" rel="noopener">{{ section.settings.button_1 }}</a>
+        {% endif %}
+      {% endif %}
+
+      {% if section.settings.button_2 %}
+        <a href="{{section.settings.button_2_link}}">{{section.settings.button_2}}</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+</div>
+
+
+
+
+
+
+{% schema  %} 
+{
+    "name":"my section",
+    "settings": [
+        {
+            "type":"text",
+            "id":"heading",
+            "label":"heading of the banner"
+        },
+        {
+            "type":"image_picker",
+            "id":"image",
+            "label":"Banner image"
+        },
+        {
+            "type":"text",
+            "id":"button_1",
+            "label":"Button 1"
+        },
+        {
+          "type": "url",
+          "id":"button_1_link",
+          "label":"Button 1 link"
+        },
+        {
+          "type":"text",
+          "id":"button_1_whatsapp_number",
+          "label":"Button 1 WhatsApp number (country code, e.g. 15551234567)",
+          "info":"Leave blank to use the Button 1 link instead"
+        },
+        {
+          "type":"text",
+          "id":"button_1_whatsapp_message",
+          "label":"Button 1 WhatsApp message (optional)",
+          "default":"Hi! I have a question about a product."
+        },
+        {
+            "type":"text",
+            "id":"button_2",
+            "label":"Button 2"
+        },
+        {
+            "type":"url",
+            "id":"button_2_link",
+            "label": "Button 2 Link"
+        }
+    ],
+  "presets": [
+    {
+      "name": "Plain section"
+    }
+  ]
+}
+ {% endschema %}

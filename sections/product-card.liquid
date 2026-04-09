@@ -1,0 +1,33 @@
+{% assign metaobjectValue = shop.metaobjects.product_card.values %}
+
+<h1>Product card</h1>
+{% for item in metaobjectValue %}
+
+    {{ item.title }}
+  {%for img in item.image.value%}
+    <img src="{{ img | image_url }}" alt="{{ item.title }}" width="300  ">
+{{item.image}}
+  {%endfor%}
+    <p>{{ item.description }}</p>
+  
+  {% endfor %}
+  
+
+
+{%schema%}
+{
+    "name":"product-card",
+    "settings":[
+        {
+            "type":"header",
+           "content":"Product Heading"
+
+        }
+    ],
+    "presets":[
+       {
+         "name":"product-card"
+       }
+    ]
+}
+    {%endschema%}
