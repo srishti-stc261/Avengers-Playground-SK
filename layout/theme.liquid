@@ -22,6 +22,7 @@
 
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
+    {{ 'product-card-avengers.css' | asset_url | stylesheet_tag }}
     {%- render 'fonts' -%}
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
@@ -46,6 +47,24 @@
       async
       blocking="render"
     ></script>
+    <style>
+        @font-face{
+      font-family: "obv-med";
+      src : url('{{ "fonnts.com-Obviously_Medi.otf" | asset_url }}')format('opentype');
+      }
+      @font-face{
+      font-family: "obv-semibold";
+      src : url('{{ "fonnts.com-Obviously_Semi.otf" | asset_url }}')format('opentype');
+      }
+       @font-face{
+      font-family: "obv-narrow-semi";
+      src : url('{{ "obviously-narrow-semi.otf" | asset_url }}')format('opentype');
+      }
+      @font-face{
+      font-family: "obv-regular";
+      src : url('{{ "fonnts.com-Obviously.otf" | asset_url }}')format('opentype');
+      }
+    </style>
 
     <main
       id="MainContent"

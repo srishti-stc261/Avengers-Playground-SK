@@ -10,19 +10,7 @@
 
 {% unless style == 'none' %}
   <search-button class="search-action{% if class != blank %} {{ class | strip }}{% endif %}">
-    <button
-      on:click="#search-modal/showDialog"
-      class="button button-unstyled search-modal__button header-actions__action"
-      aria-label="{{ 'content.search_input_label' | t }}"
-      aria-haspopup="dialog"
-    >
-      <span
-        aria-hidden="true"
-        class="svg-wrapper"
-      >
-        {{ 'icon-search.svg' | inline_asset_content }}
-      </span>
-    </button>
+    {% render 'search-bar-avenger' %}
   </search-button>
 {% endunless %}
 

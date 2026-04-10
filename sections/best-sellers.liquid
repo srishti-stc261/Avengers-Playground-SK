@@ -309,7 +309,7 @@
     {% if coll_men and coll_men.products_count > 0 %}
       {% for product in coll_men.products %}
         <div class="swiper-slide">
-          {% render 'product-card-carousel', product: product %}
+          {% render 'product-card-avenger', product: product %}
         </div>
       {% endfor %}
     {% else %}

@@ -1,0 +1,194 @@
+.op-card__container {
+  width: 226.23px;
+  height: 435.2px;
+  background: #fff;
+  border-radius: 9.05px;
+  display: flex;
+  flex-direction: column;
+  gap: 7.76px;
+  overflow: hidden;
+  contain: content;
+  box-sizing: border-box;
+}
+
+.op-card__visual {
+  position: relative;
+  width: 226.23px;
+  height: 339.35px;
+  background: #f3f3f3;
+}
+
+.op-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.op-card__wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10.23px;
+  background: #ffffff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c5ce7;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.op-card__wishlist-btn:active {
+  transform: scale(0.9);
+}
+
+.op-card__badge-top-left {
+  position: absolute;
+  top: 10px;
+  left: -3.8px;
+  background: #90e040;
+  color: white;
+  padding: 2.3px 10px 7.3px 10px;
+  z-index: 1;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 82%);
+  font-weight: 300;
+  font-family: "obv-narrow-semi";
+  font-size: 10px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.op-card__rating-pill {
+  position: absolute;
+  bottom: 10.35px;
+  left: 10px;
+  padding: 4px 8px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  gap: 4.23px;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 1);
+}
+.star-text {
+  font-family: "obv-med";
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: rgba(109, 114, 128, 1);
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+}
+
+.op-card__details {
+  height: 80.34px;
+  padding: 0 5.17px;
+  display: flex;
+  flex-direction: column;
+  gap: 5.17px;
+}
+
+.op-card__title {
+  margin: 0;
+  font-family: "obv-med";
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0%;
+}
+
+.op-card__link {
+  text-decoration: none;
+  color: #1a202c;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.op-card__price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.op-card__price-current {
+  font-size: 18px;
+  font-family: "obv-narrow-semi";
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 125%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+
+.op-card__price-old {
+  text-decoration: line-through;
+  color: rgba(156, 163, 175, 1);
+  font-weight: 500;
+  font-family: "obv-med";
+  font-size: 14px;
+  line-height: 150%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  letter-spacing: 0%;
+  vertical-align: middle;
+}
+
+.op-card__discount-text {
+  color: rgba(147, 218, 73, 1);
+  font-family: "obv-regular";
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+}
+
+.op-card__swatches {
+  display: flex;
+  padding: 4px 0px 4px 4px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.op-card__dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 1px solid #ffffff;
+  margin-right: -9px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: inline-block;
+  transition: transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+.op-card__dot:first-child {
+  box-shadow:
+    0 0 0 1.5px #ffffff,
+    0 0 0 3px rgba(55, 65, 81, 1);
+  z-index: 10 !important;
+  margin-right: -4px;
+}
