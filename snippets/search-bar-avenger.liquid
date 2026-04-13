@@ -1,12 +1,19 @@
 <div class="sk-search" role="search">
-  <button
+  {% assign is_drawer = is_drawer | default: false %}
+  <div
     id="skSearchOpen"
-    on:click="#search-modal/showDialog"
-    class="button button-unstyled search-modal__button header-actions__action sk-search-trigger"
+    {% unless is_drawer %}
+      on:click="#search-modal/showDialog"
+    {% endunless %}
+    class="button button-unstyled search-modal__button header-actions__action sk-search-trigger skSearchOpen"
     aria-label="{{ 'content.search_input_label' | t }}"
     aria-haspopup="dialog"
   >
     <span class="sk-search-icon" aria-hidden="true">{{ 'search-icon-avenger.svg' | inline_asset_content }}</span>
+    <input
+      type="text"
+      class="sk-search-input"
+    >
     <span class="sk-search-placeholder">
       <span class="static-text">Search for </span>
       {% assign words = 'T-shirts,Tops,Dress' | split: ',' %}
@@ -19,144 +26,122 @@
         </span>
       </span>
     </span>
-  </button>
-</div>
-
-<div
-  class="sk-search-overlay"
-  id="skSearchOverlay"
-  aria-hidden="true"
->
-  <div class="sk-search-panel">
-    <input
-      type="search"
-      class="sk-search-input"
-      placeholder="Search products..."
-      aria-label="Search"
-      id="skSearchInput"
-    >
   </div>
 </div>
-
 <style>
-      @font-face{
-          font-family: "obv-regular";
-          src : url('{{ "fonnts.com-Obviously.otf" | asset_url }}')format('opentype');
-      }
-    :root {
-      --sk-border: rgba(210, 213, 218, 1);
-    }
-
-    .sk-search {
-      width: 386px;
-    }
-
-    .sk-search-trigger {
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid var(--sk-border);
-      background: #fff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      cursor: pointer;
-      overflow: hidden;
-      justify-content: flex-start;
-    }
-
-    .sk-search-icon {
-      color: gray;
-    }
-
-    .sk-search-icon svg{
-      height: 24px;
-      width: 24px;
+  @font-face {
+    font-family: 'obv-regular';
+    src: url('{{ "fonnts.com-Obviously.otf" | asset_url }}') format('opentype');
+    font-display: swap;
+  }
+  :root {
+    --sk-border: rgba(210, 213, 218, 1);
   }
 
-    .sk-search-placeholder {
-      color: #666;
-      font-size: 14px;
-      font-family: "obv-regular";
-      font-weight: 400;
-      font-size: 14px;
-      leading-trim: NONE;
-      line-height: 150%;
-      letter-spacing: 0%;
-      margin: 0;
-    }
-
-    .static-text{
-      color: rgba(156, 163, 175, 1);
-      padding:0;
-      margin:0;
-      display: inline-flex;
+  .sk-search {
+    width: 386px;
   }
 
-    .sk-search-overlay {
-      position: fixed;
-      inset: 0;
-      background: #fff;
-      transform: translateX(100%);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: transform;
-      z-index: 9999;
+  .sk-search-trigger {
+    width: 100%;
+    border-radius: 999px;
+    border: 1px solid var(--sk-border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    overflow: hidden;
+    justify-content: flex-start;
+  }
+
+  .sk-search-icon {
+    color: gray;
+  }
+
+  .sk-search-icon svg {
+    height: 24px;
+    width: 24px;
+  }
+
+  .sk-search-placeholder {
+    color: #666;
+    font-size: 14px;
+    font-family: 'obv-regular';
+    font-weight: 400;
+    font-size: 14px;
+    leading-trim: NONE;
+    line-height: 150%;
+    letter-spacing: 0%;
+    margin: 0;
+  }
+
+  .static-text {
+    color: rgba(156, 163, 175, 1);
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+  }
+
+  .dynamic-wrapper {
+    display: inline-block;
+    height: 1.6em;
+    overflow: hidden;
+    vertical-align: bottom;
+    position: relative;
+  }
+
+  .dynamic-track {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    animation: stepSmooth 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    will-change: transform;
+  }
+  .dynamic-track span {
+    height: 1.6em;
+    display: flex;
+    align-items: center;
+    color: rgba(0, 0, 0, 1);
+    padding: 0;
+  }
+
+  @keyframes stepSmooth {
+    0%,
+    30% {
+      transform: translateY(0);
     }
 
-    .sk-search-overlay.sk-active {
-      transform: translateX(0);
+    40%,
+    60% {
+      transform: translateY(-1.6em);
     }
 
-    .sk-search-panel {
-      padding: 24px;
+    70%,
+    100% {
+      transform: translateY(-3.2em);
     }
+  }
 
-    .sk-search-input {
-      width: 100%;
-      height: 48px;
-      font-size: 16px;
-      padding: 0 16px;
-      border-radius: 8px;
-      border: 1px solid var(--sk-border);
-      outline: none;
-    }
+.sk-search-input {
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  font-family: "obv-regular";
+  z-index: 2;
+  display: none;
+}
 
-    .dynamic-wrapper {
-      display: inline-block;
-      height: 1.6em;
-      overflow: hidden;
-      vertical-align: bottom;
-      position: relative;
-    }
+.sk-search-input.active {
+  display: block;
+}
 
-    .dynamic-track {
-      display: flex;
-      flex-direction: column;
-      padding:0;
-      margin:0;
-      animation: stepSmooth 4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-      will-change: transform;
-    }
-    .dynamic-track span {
-      height: 1.6em;
-      display: flex;
-      align-items: center;
-      color: rgba(0, 0, 0, 1);
-      padding: 0;
-    }
+.sk-search-placeholder.hide {
+  display: none;
+}
 
-
-    @keyframes stepSmooth {
-      0%, 30% {
-        transform: translateY(0);
-      }
-
-      40%, 60% {
-        transform: translateY(-1.6em);
-      }
-
-      70%, 100% {
-        transform: translateY(-3.2em);
-      }
-    }
 </style>

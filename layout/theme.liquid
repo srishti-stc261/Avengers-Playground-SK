@@ -4,6 +4,11 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    <link rel="preload" href="{{ 'fonnts.com-Obviously_Medi.otf' | asset_url }}" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="{{ 'fonnts.com-Obviously_Semi.otf' | asset_url }}" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="{{ 'obviously-narrow-semi.otf' | asset_url }}" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="{{ 'fonnts.com-Obviously.otf' | asset_url }}" as="font" type="font/otf" crossorigin>
+    
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
@@ -23,6 +28,7 @@
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {{ 'product-card-avengers.css' | asset_url | stylesheet_tag }}
+    {{ 'search-drawer-avengers.css' | asset_url | stylesheet_tag }}
     {%- render 'fonts' -%}
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
@@ -47,6 +53,7 @@
       async
       blocking="render"
     ></script>
+    <script src="{{ 'product-card-avenger.js' | asset_url }}" defer></script>
     <style>
         @font-face{
       font-family: "obv-med";

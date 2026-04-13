@@ -1,49 +1,88 @@
-<div class="op-card__container">
-  <a href="{{ product.url }}">
-    <div class="op-card__visual">
-      {%- if product.featured_image -%}
-        {{
-          product.featured_image
-          | image_url: width: 450
-          | image_tag: loading: 'lazy', widths: '226, 450', sizes: '226px', class: 'op-card__img', alt: product.title
-        }}
-      {%- endif -%}
+{% comment %}
+  <div class="op-card__container">
+    <a href="{{ product.url }}">
+      <div class="op-card__visual">
+        {%- if product.featured_image -%}
+          {{
+            product.featured_image
+            | image_url: width: 450
+            | image_tag: loading: 'lazy', widths: '226, 450', sizes: '226px', class: 'op-card__img', alt: product.title
+          }}
+        {%- endif -%}
 
-      <div class="op-card__badge-top-left">BEST SELLER</div>
+        <div class="op-card__badge-top-left">BEST SELLER</div>
 
-      <button class="op-card__wishlist-btn" aria-label="Add to wishlist" type="button">
-        {{ 'save-icon.svg' | inline_asset_content }}
-      </button>
+        <button class="op-card__wishlist-btn" aria-label="Add to wishlist" type="button">
+          {{ 'save-icon.svg' | inline_asset_content }}
+        </button>
 
-      <div class="op-card__rating-pill">
-        <span class="op-card__star">{{ 'rating-star.svg' | inline_asset_content }}</span>
-        <span class="star-text">5.0 | 6K</span>
+        <div class="op-card__rating-pill">
+          <span class="op-card__star">{{ 'rating-star.svg' | inline_asset_content }}</span>
+          <span class="star-text">5.0 | 6K</span>
+        </div>
+      </div>
+    </a>
+    <div class="op-card__details">
+      <h3 class="op-card__title">
+        <a href="{{ product.url }}" class="op-card__link">{{ product.title | default: 'Origami woolen top' }}</a>
+      </h3>
+
+      <div class="op-card__price-row">
+        <span class="op-card__price-current">₹{{ product.price | divided_by: 100 }}</span>
+        <span class="op-card__price-old">₹{{ product.compare_at_price | divided_by: 100 }}</span>
+        <span class="op-card__discount-text">(25% OFF)</span>
+      </div>
+
+      <div class="op-card__swatches">
+        {%- for option in product.options_with_values -%}
+          {%- if option.name contains 'Color' or option.name contains 'color' -%}
+            {%- for value in option.values -%}
+              <span
+                class="op-card__dot"
+                style="background-color: {{ value | split: ' ' | last | handle }}; z-index: {{ forloop.rindex }};"
+              >
+              </span>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
       </div>
     </div>
-  </a>
-  <div class="op-card__details">
-    <h3 class="op-card__title">
-      <a href="{{ product.url }}" class="op-card__link">{{ product.title | default: 'Origami woolen top' }}</a>
-    </h3>
+  </div>
+{% endcomment %}
 
-    <div class="op-card__price-row">
-      <span class="op-card__price-current">₹{{ product.price | divided_by: 100 }}</span>
-      <span class="op-card__price-old">₹{{ product.compare_at_price | divided_by: 100 }}</span>
-      <span class="op-card__discount-text">(25% OFF)</span>
-    </div>
+<template id="op-card-template">
+  <div class="op-card__badge-top-left">BEST SELLER</div>
+  <div class="op-card__traingle"></div>
+  <div class="op-card__container">
+    <a class="op-card__url">
+      <div class="op-card__visual">
+        <img class="op-card__img">
+        <button class="op-card__wishlist-btn" aria-label="Add to wishlist" type="button">
+          <!-- SVG same rahega -->
+          {{ 'save-icon.svg' | inline_asset_content }}
+        </button>
 
-    <div class="op-card__swatches">
-      {%- for option in product.options_with_values -%}
-        {%- if option.name contains 'Color' or option.name contains 'color' -%}
-          {%- for value in option.values -%}
-            <span
-              class="op-card__dot"
-              style="background-color: {{ value | split: ' ' | last | handle }}; z-index: {{ forloop.rindex }};"
-            >
-            </span>
-          {%- endfor -%}
-        {%- endif -%}
-      {%- endfor -%}
+        <div class="op-card__rating-pill">
+          <span class="op-card__star">
+            {{ 'rating-star.svg' | inline_asset_content }}
+          </span>
+          <span class="star-text">5.0 | 6K</span>
+        </div>
+      </div>
+    </a>
+
+    <div class="op-card__details">
+      <h3 class="op-card__title">
+        <a class="op-card__link"></a>
+      </h3>
+
+      <div class="op-card__price-row">
+        <span class="op-card__price-current"></span>
+        <span class="op-card__price-old"></span>
+        <span class="op-card__discount-text"></span>
+      </div>
+
+      <div class="op-card__swatches"></div>
     </div>
   </div>
-</div>
+</template>
