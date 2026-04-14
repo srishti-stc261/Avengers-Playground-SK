@@ -1,5 +1,6 @@
 const wrapper = document.querySelector(".sh-dr-modal-wrapper");
 const isDrawer = wrapper?.dataset.isDrawer === "true";
+let currentIndex = -1;
 
 let inputValue;
 document.addEventListener("DOMContentLoaded", function () {
@@ -26,18 +27,48 @@ document.addEventListener("DOMContentLoaded", function () {
         placeholder.classList.add("hide");
         crossIcon?.classList.add("active");
         input.focus();
-        input?.addEventListener("input", (e) => {
-          inputValue = e.target.value;
+        input?.addEventListener("keydown", (e) => {
+          const items = document.querySelectorAll(".sh-dr-tag-list li");
+
+          if (items.length) {
+            if (e.key === "ArrowRight") {
+              currentIndex++;
+
+              if (currentIndex >= items.length) {
+                currentIndex = 0;
+              }
+              input.value = items[currentIndex].textContent;
+            }
+
+            if (e.key === "ArrowLeft") {
+              currentIndex--;
+
+              if (currentIndex < 0) {
+                currentIndex = items.length - 1;
+              }
+
+              input.value = items[currentIndex].textContent;
+            }
+
+            items.forEach((el) => el.classList.remove("active"));
+            const currentItem = items[currentIndex];
+            currentItem?.classList.add("active");
+          }
+          inputValue = input.value;
+          console.log("currentIndex: ", currentIndex);
           fetchSearchResults(inputValue);
         });
       });
 
       crossIcon?.addEventListener("click", (e) => {
         e.stopPropagation();
+        const items = document.querySelectorAll(".sh-dr-tag-list li");
         input.classList.remove("active");
         placeholder.classList.remove("hide");
         crossIcon.classList.remove("active");
+        items.forEach((el) => el.classList.remove("active"));
         input.value = ""; // clear input
+
         console.log("cross icon clicked");
       });
 

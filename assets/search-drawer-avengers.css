@@ -68,7 +68,6 @@
 
 .sh-dr-tag-list li {
   padding: 8px 0;
-  cursor: pointer;
   transition: color 0.2s;
   font-family: "obv-med";
   font-weight: 500;
@@ -78,10 +77,9 @@
   color: rgba(109, 114, 128, 1);
 }
 
-.sh-dr-tag-list li:hover {
+.sh-dr-tag-list li.active {
   color: #6446be;
 }
-
 .sh-dr-product-row {
   display: flex;
   gap: 16px;
