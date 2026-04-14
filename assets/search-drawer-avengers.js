@@ -1,5 +1,5 @@
 const wrapper = document.querySelector(".sh-dr-modal-wrapper");
-const isDrawer = wrapper?.dataset.isDrawer === "true";
+const closeDrawer = document.querySelector(".sh-dr-close-trigger");
 let currentIndex = -1;
 
 let inputValue;
@@ -16,12 +16,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const stg = document.querySelector(".sk-search-trigger");
 
   searchTriggers.forEach((searchTrigger) => {
-    if (isDrawer) {
-      const input = searchTrigger.querySelector(".sk-search-input");
-      const placeholder = searchTrigger.querySelector(".sk-search-placeholder");
-      const crossIcon = searchTrigger.querySelector(".svg-icon-sk");
+    const input = searchTrigger.querySelector(".sk-search-input");
+    const placeholder = searchTrigger.querySelector(".sk-search-placeholder");
+    const crossIcon = searchTrigger.querySelector(".svg-icon-sk");
 
-      searchTrigger.addEventListener("click", function (e) {
+    searchTrigger.addEventListener("click", function (e) {
+      const isDrawer = searchTrigger.closest(".sh-dr-modal-wrapper") !== null;
+
+      if (isDrawer) {
+        console.log("Drawer wala search");
         e.stopPropagation();
         input.classList.add("active");
         placeholder.classList.add("hide");
@@ -58,24 +61,24 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("currentIndex: ", currentIndex);
           fetchSearchResults(inputValue);
         });
-      });
+      }
+    });
 
-      crossIcon?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const items = document.querySelectorAll(".sh-dr-tag-list li");
-        input.classList.remove("active");
-        placeholder.classList.remove("hide");
-        crossIcon.classList.remove("active");
-        items.forEach((el) => el.classList.remove("active"));
-        input.value = ""; // clear input
+    crossIcon?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const items = document.querySelectorAll(".sh-dr-tag-list li");
+      input.classList.remove("active");
+      placeholder.classList.remove("hide");
+      crossIcon.classList.remove("active");
+      items.forEach((el) => el.classList.remove("active"));
+      input.value = ""; // clear input
 
-        console.log("cross icon clicked");
-      });
+      console.log("cross icon clicked");
+    });
 
-      input.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
-    }
+    input.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
   });
 });
 
@@ -104,4 +107,45 @@ document.addEventListener("DOMContentLoaded", async function () {
     li.textContent = item.title;
     list.appendChild(li);
   });
+});
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function fetchSuggestions(query) {
+    const res = await fetch(
+      `https://services.mybcapps.com/bc-sf-filter/search/suggest?q="s"&shop=avengers-playground.myshopify.com`,
+    );
+
+    const data = await res.json();
+    const wrapper = document.querySelector("#suggestions-wrapper");
+    console.log("suggest ", data);
+
+    wrapper.innerHTML = "";
+
+    data.products.forEach((product) => {
+      const slide = document.createElement("div");
+      slide.classList.add("swiper-slide", "sh-dr-item-card");
+      console.log("prodimage", product.images["1"]);
+
+      slide.innerHTML = `
+      <product-card-avenger 
+        data-product='${JSON.stringify({
+          url: product.url,
+          title: product.title,
+          price: product.price_min,
+          compare_at_price: product.compare_at_price_min,
+          featured_image: product.images["1"],
+          variants: [],
+        })}'
+      ></product-card-avenger>
+    `;
+
+      wrapper.appendChild(slide);
+    });
+  },
+);
+
+closeDrawer?.addEventListener("click", () => {
+  console.log("close clicked");
+  document.querySelector(".sh-dr-modal-wrapper").classList.remove("open");
 });

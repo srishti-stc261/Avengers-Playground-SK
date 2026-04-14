@@ -33,7 +33,7 @@ class ProductCardAvenger extends HTMLElement {
     oldPrice.textContent = `₹${product.compare_at_price}`;
     discount.textContent = `(25% OFF)`;
 
-    const hasColor = isValidColor(product.variants[0].color);
+    const hasColor = isValidColor(product?.variants[0]?.color);
     //  swatches
     if (product.variants && product.variants.length) {
       product.variants.forEach((variant, index) => {

@@ -3,7 +3,7 @@
   <div
     id="skSearchOpen"
     {% unless is_drawer %}
-      on:click="#search-modal/showDialog"
+      onclick="openSearchDrawer()"
     {% endunless %}
     class="button button-unstyled search-modal__button header-actions__action sk-search-trigger skSearchOpen"
     aria-label="{{ 'content.search_input_label' | t }}"
@@ -169,3 +169,10 @@
     display: flex;
   }
 </style>
+
+<script>
+function openSearchDrawer() {
+  console.log("drawer khulega");
+  document.querySelector(".sh-dr-modal-wrapper").classList.add("open")
+}
+</script>
