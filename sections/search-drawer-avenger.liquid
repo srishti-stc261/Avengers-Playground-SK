@@ -1,92 +1,60 @@
-<div class="sh-dr-modal-wrapper">
+<div class="sh-dr-modal-wrapper" data-is-drawer="true">
   <div class="searchSpace">
-   SEARCH
-   <span class="sh-dr-close-trigger">{{ 'cross-icon.svg' | inline_asset_content }}</span>
+    SEARCH
+    <span class="sh-dr-close-trigger">{{ 'cross-icon.svg' | inline_asset_content }}</span>
   </div>
   <div class="sh-dr-header-area">
-    {% render 'search-bar-avenger' , is_drawer: true %}
+    {% render 'search-bar-avenger', is_drawer: true %}
   </div>
 
   <div class="sh-dr-content-scroll">
     <div class="sh-dr-section-wrap">
       <h3 class="sh-dr-title-text">Most Searched</h3>
       <ul class="sh-dr-tag-list">
-        <li>Gen Z Tops</li>
-        <li>Suit</li>
-        <li>Denims</li>
-        <li>Shirt</li>
       </ul>
     </div>
 
     <div class="sh-dr-section-wrap suggest">
       <h3 class="sh-dr-title-text">Suggestions</h3>
       <div class="swiper sh-dr-product-slider">
-  <div class="swiper-wrapper">
-
-    {% for product in collections['all'].products limit: 10 %}
-      <div class="swiper-slide sh-dr-item-card">
-  <product-card-avenger
-  data-product='{
-    "url": "{{ product.url }}",
-    "title": "{{ product.title | escape }}",
-    "price": {{ product.price | divided_by: 100 }},
-    "compare_at_price": {{ product.compare_at_price | divided_by: 100 }},
-    "featured_image": "{{ product.featured_image | image_url: width: 450 }}",
-   "variants": [
-  {% for variant in product.variants %}
-    {
-      "id": "{{ variant.id }}",
-      "color": "{{ variant.options[0] | handle }}",
-      "image": "{{ variant.featured_image | image_url: width: 450 }}"
-    }{% unless forloop.last %},{% endunless %}
-  {% endfor %}
-]
-  }'
-></product-card-avenger>
-
+        <div class="swiper-wrapper">
+          {% for product in collections.all.products limit: 10 %}
+            <div class="swiper-slide sh-dr-item-card">
+              <product-card-avenger
+                data-product='
+                  {
+                      "url": "{{ product.url }}",
+                      "title": "{{ product.title | escape }}",
+                      "price": {{ product.price | divided_by: 100 }},
+                      "compare_at_price": {{ product.compare_at_price | divided_by: 100 }},
+                      "featured_image": "{{ product.featured_image | image_url: width: 450 }}",
+                     "variants": [
+                    {% for variant in product.variants %}
+                      {
+                        "id": "{{ variant.id }}",
+                        "color": "{{ variant.options[0] | handle }}",
+                        "image": "{{ variant.featured_image | image_url: width: 450 }}"
+                      }{% unless forloop.last %},{% endunless %}
+                    {% endfor %}
+                  ]
+                    }
+                '
+              ></product-card-avenger>
+            </div>
+          {% endfor %}
+        </div>
       </div>
-    {% endfor %}
-
-  </div>
-</div>
     </div>
   </div>
 
   <div class="sh-dr-footer-panel">
-    <button class="sh-dr-submit-button"><span class="results">SEE ALL RESULTS</span><span class="arrow">{{ 'arrow-search.svg' | inline_asset_content }}</span></button>
+    <button class="sh-dr-submit-button">
+      <span class="results">SEE ALL RESULTS</span
+      ><span class="arrow">{{ 'arrow-search.svg' | inline_asset_content }}</span>
+    </button>
   </div>
 </div>
-
-<script>
- 
-document.addEventListener("DOMContentLoaded", function () {
-  new Swiper(".sh-dr-product-slider", {
-    slidesPerView: "auto",
-    spaceBetween: 16,
-    freeMode: true,
-  });
-});
-  
- document.addEventListener("DOMContentLoaded", function () {
-  const searchTriggers = document.querySelectorAll(".skSearchOpen");
-
-  searchTriggers.forEach((searchTrigger) => {
-    const input = searchTrigger.querySelector(".sk-search-input");
-    const placeholder = searchTrigger.querySelector(".sk-search-placeholder");
-
-    searchTrigger.addEventListener("click", function () {
-      input.classList.add("active");
-      placeholder.classList.add("hide");
-      input.focus();
-    });
-
-    input.addEventListener("click", function (e) {
-      e.stopPropagation();
-    });
-  });
-});
-
-</script>
+<script src="{{ 'search-drawer-avengers.js' | asset_url }}" defer></script>
 {% schema %}
 {
   "name": "Search Drawer Avenger",
