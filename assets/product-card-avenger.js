@@ -29,9 +29,20 @@ class ProductCardAvenger extends HTMLElement {
     title.href = product.url;
     title.textContent = product.title || "Origami woolen top";
 
-    price.textContent = `₹${product.price}`;
-    oldPrice.textContent = `₹${product.compare_at_price}`;
-    discount.textContent = `(25% OFF)`;
+    const priceValue = product.price;
+    const comparePriceValue = product.compare_at_price;
+
+    price.textContent = `₹${priceValue}`;
+    oldPrice.textContent = `₹${comparePriceValue}`;
+
+    if (comparePriceValue && comparePriceValue > priceValue) {
+      const discountPercent = Math.round(
+        ((comparePriceValue - priceValue) / comparePriceValue) * 100,
+      );
+      discount.textContent = `(${discountPercent}% OFF)`;
+    } else {
+      discount.textContent = "";
+    }
 
     const hasColor = isValidColor(product?.variants[0]?.color);
     //  swatches

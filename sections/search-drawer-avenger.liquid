@@ -1,3 +1,4 @@
+<div class="overlay-sk"></div>
 <div class="sh-dr-modal-wrapper" data-is-drawer="true">
   <div class="searchSpace">
     SEARCH
@@ -8,43 +9,66 @@
   </div>
 
   <div class="sh-dr-content-scroll">
-    <div class="sh-dr-section-wrap">
-      <h3 class="sh-dr-title-text">Most Searched</h3>
-      <ul class="sh-dr-tag-list"></ul>
-    </div>
+    {% comment %}
+      <div class="sh-dr-section-wrap">
+        <h3 class="sh-dr-title-text">Most Searched</h3>
+        <ul class="sh-dr-tag-list"></ul>
+      </div>
 
-    <div class="sh-dr-section-wrap suggest">
-      <h3 class="sh-dr-title-text">Suggestions</h3>
-      <div class="swiper sh-dr-product-slider">
-        <div class="swiper-wrapper" id="suggestions-wrapper">
-          {% comment %}
-            {% for product in collections.all.products limit: 10 %}
-              <div class="swiper-slide sh-dr-item-card">
-                <product-card-avenger
-                  data-product='
-                    {
-                        "url": "{{ product.url }}",
-                        "title": "{{ product.title | escape }}",
-                        "price": {{ product.price | divided_by: 100 }},
-                        "compare_at_price": {{ product.compare_at_price | divided_by: 100 }},
-                        "featured_image": "{{ product.featured_image | image_url: width: 450 }}",
-                       "variants": [
-                      {% for variant in product.variants %}
-                        {
-                          "id": "{{ variant.id }}",
-                          "color": "{{ variant.options[0] | handle }}",
-                          "image": "{{ variant.featured_image | image_url: width: 450 }}"
-                        }{% unless forloop.last %},{% endunless %}
-                      {% endfor %}
-                    ]
-                      }
-                  '
-                ></product-card-avenger>
-              </div>
-            {% endfor %}
-          {% endcomment %}
+      <div class="sh-dr-section-wrap suggest">
+        <h3 class="sh-dr-title-text">Suggestions</h3>
+        <div class="swiper sh-dr-product-slider">
+          <div class="swiper-wrapper" id="suggestions-wrapper">
+            {% comment %}
+              {% for product in collections.all.products limit: 10 %}
+                <div class="swiper-slide sh-dr-item-card">
+                  <product-card-avenger
+                    data-product='
+                      {
+                          "url": "{{ product.url }}",
+                          "title": "{{ product.title | escape }}",
+                          "price": {{ product.price | divided_by: 100 }},
+                          "compare_at_price": {{ product.compare_at_price | divided_by: 100 }},
+                          "featured_image": "{{ product.featured_image | image_url: width: 450 }}",
+                         "variants": [
+                        {% for variant in product.variants %}
+                          {
+                            "id": "{{ variant.id }}",
+                            "color": "{{ variant.options[0] | handle }}",
+                            "image": "{{ variant.featured_image | image_url: width: 450 }}"
+                          }{% unless forloop.last %},{% endunless %}
+                        {% endfor %}
+                      ]
+                        }
+                    '
+                  ></product-card-avenger>
+                </div>
+              {% endfor %}
+            {% endcomment %}
+          </div>
         </div>
       </div>
+    {% endcomment %}
+
+    <!-- DEFAULT VIEW -->
+    <div class="default-view">
+      <div class="sh-dr-section-wrap">
+        <h3 class="sh-dr-title-text">Most Searched</h3>
+        <ul class="sh-dr-tag-list"></ul>
+      </div>
+
+      <div class="sh-dr-section-wrap suggest">
+        <h3 class="sh-dr-title-text">Suggestions</h3>
+        <div class="swiper sh-dr-product-slider">
+          <div class="swiper-wrapper" id="suggestions-wrapper"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH RESULTS -->
+    <div class="search-results-sk" style="display:none;">
+      <div id="results-grid-sk" class="results-grid-sk"></div>
+      <div id="loader-sk" class="loader-sk"></div>
     </div>
   </div>
 

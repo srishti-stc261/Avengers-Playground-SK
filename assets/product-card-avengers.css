@@ -125,7 +125,7 @@
 
 .op-card__link {
   text-decoration: none;
-  color: #1a202c;
+  color: rgba(31, 41, 55, 1);
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -148,6 +148,7 @@
   text-transform: uppercase;
   display: flex;
   align-items: center;
+  color: rgba(31, 41, 55, 1);
 }
 
 .op-card__price-old {

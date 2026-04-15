@@ -1,8 +1,38 @@
 const wrapper = document.querySelector(".sh-dr-modal-wrapper");
 const closeDrawer = document.querySelector(".sh-dr-close-trigger");
 let currentIndex = -1;
-
+let page = 1;
+let loading = false;
+let query = "";
 let inputValue;
+
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+function handleSearch(e) {
+  query = e.target.value;
+  page = 1;
+
+  if (!query) {
+    showDefault();
+    return;
+  }
+
+  inputValue = query;
+  console.log("currentIndex: ", currentIndex);
+  showResults();
+  fetchProducts(query, page, true);
+}
+
+const debouncedSearch = debounce(handleSearch, 300);
+
 document.addEventListener("DOMContentLoaded", function () {
   new Swiper(".sh-dr-product-slider", {
     slidesPerView: "auto",
@@ -30,37 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         placeholder.classList.add("hide");
         crossIcon?.classList.add("active");
         input.focus();
-        input?.addEventListener("keydown", (e) => {
-          const items = document.querySelectorAll(".sh-dr-tag-list li");
-
-          if (items.length) {
-            if (e.key === "ArrowRight") {
-              currentIndex++;
-
-              if (currentIndex >= items.length) {
-                currentIndex = 0;
-              }
-              input.value = items[currentIndex].textContent;
-            }
-
-            if (e.key === "ArrowLeft") {
-              currentIndex--;
-
-              if (currentIndex < 0) {
-                currentIndex = items.length - 1;
-              }
-
-              input.value = items[currentIndex].textContent;
-            }
-
-            items.forEach((el) => el.classList.remove("active"));
-            const currentItem = items[currentIndex];
-            currentItem?.classList.add("active");
-          }
-          inputValue = input.value;
-          console.log("currentIndex: ", currentIndex);
-          fetchSearchResults(inputValue);
-        });
+        input.addEventListener("input", debouncedSearch);
       }
     });
 
@@ -72,6 +72,16 @@ document.addEventListener("DOMContentLoaded", function () {
       crossIcon.classList.remove("active");
       items.forEach((el) => el.classList.remove("active"));
       input.value = ""; // clear input
+
+      // RESET STATE
+      query = "";
+      page = 1;
+      loading = false;
+
+      //  UI RESET
+      showDefault();
+
+      document.getElementById("results-grid-sk").innerHTML = "";
 
       console.log("cross icon clicked");
     });
@@ -125,7 +135,6 @@ document.addEventListener(
     data.products.forEach((product) => {
       const slide = document.createElement("div");
       slide.classList.add("swiper-slide", "sh-dr-item-card");
-      console.log("prodimage", product.images["1"]);
 
       slide.innerHTML = `
       <product-card-avenger 
@@ -146,6 +155,90 @@ document.addEventListener(
 );
 
 closeDrawer?.addEventListener("click", () => {
-  console.log("close clicked");
   document.querySelector(".sh-dr-modal-wrapper").classList.remove("open");
+  overlay.classList.remove("active");
+});
+function showResults() {
+  document.querySelector(".default-view").style.display = "none";
+  document.querySelector(".search-results-sk").style.display = "block";
+  document.querySelector(".sh-dr-submit-button").style.display = "flex";
+}
+
+function showDefault() {
+  document.querySelector(".default-view").style.display = "block";
+  document.querySelector(".search-results-sk").style.display = "none";
+  document.querySelector(".sh-dr-submit-button").style.display = "none";
+}
+
+async function fetchProducts(query, page = 1, reset = false) {
+  if (loading) return;
+  loading = true;
+
+  const grid = document.getElementById("results-grid-sk");
+
+  // skeleton
+  if (reset) {
+    grid.innerHTML = "";
+    for (let i = 0; i < 6; i++) {
+      grid.innerHTML += `<div class="skeleton-sk"></div>`;
+    }
+  }
+
+  const res = await fetch(
+    `https://services.mybcapps.com/bc-sf-filter/search?q=${query}&page=${page}&shop=avengers-playground.myshopify.com`,
+  );
+
+  const data = await res.json();
+  console.log("searched results: ", data);
+
+  if (reset) grid.innerHTML = "";
+
+  data.products.forEach((product) => {
+    const slide = document.createElement("div");
+    slide.classList.add("swiper-slide", "sh-dr-item-card");
+
+    slide.innerHTML = `
+      <product-card-avenger 
+        data-product='${JSON.stringify({
+          url: product.url,
+          title: product.title,
+          price: product.price_min,
+          compare_at_price: product.compare_at_price_min,
+          featured_image: product.images["1"],
+          variants: [],
+        })}'
+      ></product-card-avenger>
+    `;
+
+    grid.appendChild(slide);
+  });
+  loading = false;
+}
+
+document
+  .querySelector(".sh-dr-content-scroll")
+  .addEventListener("scroll", () => {
+    const container = document.querySelector(".sh-dr-content-scroll");
+
+    if (
+      container.scrollTop + container.clientHeight >=
+      container.scrollHeight - 50
+    ) {
+      page++;
+      fetchProducts(query, page);
+    }
+  });
+
+const overlay = document.querySelector(".overlay-sk");
+
+function openSearchDrawer() {
+  document.querySelector(".sh-dr-modal-wrapper").classList.add("open");
+
+  overlay.classList.add("active");
+}
+
+overlay.addEventListener("click", () => {
+  document.querySelector(".sh-dr-modal-wrapper").classList.remove("open");
+
+  overlay.classList.remove("active");
 });
