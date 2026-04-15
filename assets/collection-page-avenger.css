@@ -1,0 +1,156 @@
+.pg-container {
+  display: flex;
+  gap: 20px;
+  padding: 32px 55px;
+}
+.pg-sidebar {
+  width: 320px;
+  gap: 20px;
+  flex-direction: column;
+  display: flex;
+}
+
+.pg-filter {
+  border-bottom: 1px solid rgba(235, 235, 235, 1);
+}
+
+.pg-filter-header {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: "obv-med";
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  color: rgba(31, 41, 55, 1);
+  margin-bottom: 12px;
+}
+
+.pg-filter-body {
+  margin-bottom: 20px;
+}
+
+.pg-filter-body label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pg-filter-body label .pg-option {
+  font-family: "obv-regular";
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 143%;
+  letter-spacing: 0%;
+  color: rgba(0, 0, 0, 1);
+}
+
+.pg-filter-body input[type="checkbox"],
+.pg-filter-body input[type="radio"] {
+  accent-color: rgba(68, 48, 123, 1);
+  width: 24px;
+  padding: 0;
+  margin: 0;
+  height: 24px;
+}
+
+.pg-colors {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px 0;
+}
+.pg-colors div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.pg-colors div .color-bar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: rgba(224, 176, 255, 1);
+  border: 1px solid white;
+}
+
+.pg-colors div .color-bar.active {
+  box-shadow:
+    0 0 0 1.5px #ffffff,
+    0 0 0 3px rgba(55, 65, 81, 1);
+  z-index: 10 !important;
+}
+.pg-colors div .color-text {
+  font-family: "obv-regular";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  color: rgba(0, 0, 0, 1);
+}
+
+.pg-range {
+  width: 100%;
+  margin-bottom: 16px;
+  accent-color: rgba(100, 70, 190, 1);
+  height: 3px;
+}
+
+.pg-price-inputs {
+  display: flex;
+  gap: 8px;
+}
+
+.pg-price-inputs input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(196, 178, 230, 1);
+  gap: 10px;
+  border-radius: 8px;
+  font-family: "obv-regular";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0%;
+}
+
+.pg-price-inputs input[type="number"]::placeholder {
+  color: rgba(100, 70, 190, 1);
+}
+
+.pg-price-inputs .minus {
+  border: 1px solid rgba(100, 70, 190, 1);
+  height: 0;
+  width: 53.18px;
+  align-self: center;
+}
+.pg-products {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.pg-card {
+  border: 1px solid #eee;
+  padding: 10px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.pg-card:hover {
+  transform: translateY(-5px);
+}
+
+.pg-card img {
+  width: 100%;
+  height: auto;
+}
+
+.price {
+  font-weight: bold;
+}

@@ -1,0 +1,136 @@
+<section class="pg-container">
+  <!-- SIDEBAR -->
+  <aside class="pg-sidebar">
+    <!-- Gender -->
+    <div class="pg-filter">
+      <div class="pg-filter-header">
+        Gender <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+      </div>
+      <div class="pg-filter-body">
+        <label><input type="radio" name="gender" checked> <span class="pg-option">Men</span></label>
+        <label><input type="radio" name="gender"> <span class="pg-option">Women</span></label>
+        <label><input type="radio" name="gender"><span class="pg-option">Boy</span></label>
+        <label><input type="radio" name="gender"><span class="pg-option">Girl</span></label>
+      </div>
+    </div>
+
+    <!-- Availability -->
+    <div class="pg-filter">
+      <div class="pg-filter-header">
+        Availability <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+      </div>
+      <div class="pg-filter-body">
+        <label><input type="checkbox" checked> <span class="pg-option">In Stock (25)</span></label>
+        <label><input type="checkbox"><span class="pg-option">Out of Stock</span></label>
+      </div>
+    </div>
+
+    <!-- Product Type -->
+    <div class="pg-filter">
+      <div class="pg-filter-header">
+        Product Type <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+      </div>
+      <div class="pg-filter-body">
+        <label><input type="checkbox"> <span class="pg-option">Crop Top (25)</span></label>
+        <label><input type="checkbox" checked> <span class="pg-option">Coats (5)</span></label>
+        <label><input type="checkbox" checked> <span class="pg-option">Denim (2)</span></label>
+        <label><input type="checkbox" checked> <span class="pg-option">T-shirts (17)</span></label>
+        <label><input type="checkbox"> <span class="pg-option">Kaftan (10)</span></label>
+      </div>
+    </div>
+
+    <!-- Color -->
+    <div class="pg-filter">
+      <div class="pg-filter-header">
+        Color <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+      </div>
+      <div class="pg-filter-body">
+        <div class="pg-colors">
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar active"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div class="pg-filter">
+      <div class="pg-filter-header">
+        Size <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+      </div>
+      <div class="pg-filter-body">
+        <label><input type="checkbox"> <span class="pg-option">XS</span></label>
+        <label><input type="checkbox"> <span class="pg-option">S</span></label>
+        <label><input type="checkbox"> <span class="pg-option">M</span></label>
+        <label><input type="checkbox" checked> <span class="pg-option">L</span></label>
+        <label><input type="checkbox"> <span class="pg-option">XL</span></label>
+        <label><input type="checkbox"> <span class="pg-option">2XL</span></label>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="pg-filter">
+      <div class="pg-filter-header">
+        Price <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+      </div>
+      <div class="pg-filter-body">
+        <input type="range" min="0" max="1500" value="1500" class="pg-range">
+        <div class="pg-price-inputs">
+          <input type="number" placeholder="₹ 0">
+          <div class="minus"></div>
+          <input type="number" placeholder="₹ 1500">
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PRODUCTS -->
+  <div class="pg-products">
+    <!-- PRODUCT CARD -->
+    <div class="pg-card">
+      <img src="https://via.placeholder.com/300x400" alt="">
+      <h4>Beige Crop Top</h4>
+      <p class="price">₹999</p>
+    </div>
+
+    <div class="pg-card">
+      <img src="https://via.placeholder.com/300x400" alt="">
+      <h4>Printed Sweatshirt</h4>
+      <p class="price">₹1499</p>
+    </div>
+
+    <div class="pg-card">
+      <img src="https://via.placeholder.com/300x400" alt="">
+      <h4>Rust Full Sleeve Top</h4>
+      <p class="price">₹1299</p>
+    </div>
+
+    <div class="pg-card">
+      <img src="https://via.placeholder.com/300x400" alt="">
+      <h4>Yellow Shirt</h4>
+      <p class="price">₹1199</p>
+    </div>
+  </div>
+</section>
+
+<link rel="stylesheet" href="{{ 'collection-page-avenger.css' | asset_url }}">
+<script src="{{ 'collection-page-avenger.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "CollectionPage Avengers",
+  "settings": [],
+  "presets": [{ "name": "CollectionPage Avengersy" }]
+}
+{% endschema %}
