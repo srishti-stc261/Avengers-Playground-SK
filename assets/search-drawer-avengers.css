@@ -23,6 +23,7 @@
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
+  width: 528px;
 }
 
 .sh-dr-header-area {
@@ -103,6 +104,8 @@
 
 .sh-dr-item-card {
   flex: 0 0 190px;
+  --card-width: 140px;
+  position: relative;
 }
 
 .sh-dr-img-holder {

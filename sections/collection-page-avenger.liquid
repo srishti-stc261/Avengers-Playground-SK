@@ -96,41 +96,17 @@
   </aside>
 
   <!-- PRODUCTS -->
-  <div class="pg-products">
-    <!-- PRODUCT CARD -->
-    <div class="pg-card">
-      <img src="https://via.placeholder.com/300x400" alt="">
-      <h4>Beige Crop Top</h4>
-      <p class="price">₹999</p>
-    </div>
-
-    <div class="pg-card">
-      <img src="https://via.placeholder.com/300x400" alt="">
-      <h4>Printed Sweatshirt</h4>
-      <p class="price">₹1499</p>
-    </div>
-
-    <div class="pg-card">
-      <img src="https://via.placeholder.com/300x400" alt="">
-      <h4>Rust Full Sleeve Top</h4>
-      <p class="price">₹1299</p>
-    </div>
-
-    <div class="pg-card">
-      <img src="https://via.placeholder.com/300x400" alt="">
-      <h4>Yellow Shirt</h4>
-      <p class="price">₹1199</p>
-    </div>
-  </div>
+  <div class="pg-products"></div>
 </section>
 
 <link rel="stylesheet" href="{{ 'collection-page-avenger.css' | asset_url }}">
 <script src="{{ 'collection-page-avenger.js' | asset_url }}" defer></script>
+<script src="{{ 'product-card-avenger.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
   "name": "CollectionPage Avengers",
   "settings": [],
-  "presets": [{ "name": "CollectionPage Avengersy" }]
+  "presets": [{ "name": "CollectionPage Avengers" }]
 }
 {% endschema %}

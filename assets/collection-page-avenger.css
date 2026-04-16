@@ -133,24 +133,39 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  margin: 20px 50px;
+  align-items: stretch;
 }
 
 .pg-card {
-  border: 1px solid #eee;
-  padding: 10px;
-  text-align: center;
-  transition: 0.3s;
-}
-
-.pg-card:hover {
-  transform: translateY(-5px);
-}
-
-.pg-card img {
-  width: 100%;
-  height: auto;
+  position: relative;
+  --card-width: 350px;
+  display: flex;
+  flex-direction: column;
 }
 
 .price {
   font-weight: bold;
+}
+
+product-card-avenger .op-card__price-current {
+  font-size: 20px;
+}
+
+product-card-avenger .op-card__price-old {
+  font-size: 14px;
+}
+
+product-card-avenger .op-card__discount-text {
+  font-size: 16px;
+}
+
+product-card-avenger .op-card__badge-top-left {
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0%;
+}
+
+product-card-avenger .op-card__traingle {
+  top: -41px;
 }

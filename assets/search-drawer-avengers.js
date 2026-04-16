@@ -139,7 +139,10 @@ document.addEventListener(
       slide.innerHTML = `
       <product-card-avenger 
         data-product='${JSON.stringify({
-          url: product.url,
+          url:
+            product.url ||
+            product.onlineStoreUrl ||
+            `/products/${product.handle}`,
           title: product.title,
           price: product.price_min,
           compare_at_price: product.compare_at_price_min,
@@ -200,7 +203,10 @@ async function fetchProducts(query, page = 1, reset = false) {
     slide.innerHTML = `
       <product-card-avenger 
         data-product='${JSON.stringify({
-          url: product.url,
+          url:
+            product.url ||
+            product.onlineStoreUrl ||
+            `/products/${product.handle}`,
           title: product.title,
           price: product.price_min,
           compare_at_price: product.compare_at_price_min,
@@ -242,3 +248,19 @@ overlay.addEventListener("click", () => {
 
   overlay.classList.remove("active");
 });
+
+const searchResultNavigation = () => {
+  const searchBtn = document.querySelector(".sh-dr-submit-button");
+  const input = document.querySelector(".sk-search-input");
+
+  searchBtn?.addEventListener("click", () => {
+    if (!query || query.trim() === "") return;
+
+    const finalQuery = encodeURIComponent(query.trim());
+    console.log("finalquery", finalQuery);
+
+    window.location.href = `/search?q=${finalQuery}`;
+  });
+};
+
+searchResultNavigation();
