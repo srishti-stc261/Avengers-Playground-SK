@@ -32,18 +32,31 @@ class ProductCardAvenger extends HTMLElement {
     const priceValue = product.price;
     const comparePriceValue = product.compare_at_price;
 
+    let priceInt;
+    let compareInt;
+
+    if (priceValue && comparePriceValue) {
+      priceInt = Math.round(priceValue);
+      compareInt = Math.round(comparePriceValue);
+    }
+
     price.textContent = `₹${priceValue}`;
     oldPrice.textContent = `₹${comparePriceValue}`;
 
     if (comparePriceValue && comparePriceValue > priceValue) {
       const discountPercent = Math.round(
-        ((comparePriceValue - priceValue) / comparePriceValue) * 100,
+        ((compareInt - priceInt) / compareInt) * 100,
       );
-      discount.textContent = `(${discountPercent}% OFF)`;
+      if (discountPercent) {
+        discount.textContent = `(${discountPercent}% OFF)`;
+      }
     } else {
       discount.textContent = "";
     }
 
+    if (priceValue === comparePriceValue) {
+      oldPrice.textContent = "";
+    }
     const hasColor = isValidColor(product?.variants[0]?.color);
     //  swatches
     if (product.variants && product.variants.length) {
