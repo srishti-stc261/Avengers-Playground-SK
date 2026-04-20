@@ -20,8 +20,8 @@
         Availability <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
-        <label><input type="checkbox" checked> <span class="pg-option">In Stock (25)</span></label>
-        <label><input type="checkbox"><span class="pg-option">Out of Stock</span></label>
+        <label><input type="checkbox" checked name="instock"> <span class="pg-option stock">In Stock (25)</span></label>
+        <label><input type="checkbox" name="outofstock"><span class="pg-option stock">Out of Stock</span></label>
       </div>
     </div>
 
@@ -35,7 +35,7 @@
         <label><input type="checkbox" checked> <span class="pg-option">Coats (5)</span></label>
         <label><input type="checkbox" checked> <span class="pg-option">Denim (2)</span></label>
         <label><input type="checkbox" checked> <span class="pg-option">T-shirts (17)</span></label>
-        <label><input type="checkbox"> <span class="pg-option">Kaftan (10)</span></label>
+        <label><input type="checkbox"> <span class="pg-option">Bottom Wear (10)</span></label>
       </div>
     </div>
 
@@ -46,12 +46,12 @@
       </div>
       <div class="pg-filter-body">
         <div class="pg-colors">
-          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-          <div><span class="color-bar active"></span><span class="color-text">Beige</span></div>
-          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-          <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar black" data-color="black"></span><span class="color-text">Black</span></div>
+          <div><span class="color-bar active" data-color="beige"></span><span class="color-text">Beige</span></div>
+          <div><span class="color-bar white" data-color="white"></span><span class="color-text">White</span></div>
+          <div><span class="color-bar blue" data-color="blue"></span><span class="color-text">Blue</span></div>
+          <div><span class="color-bar red" data-color="red"></span><span class="color-text">Red</span></div>
+          <div><span class="color-bar brown" data-color="brown"></span><span class="color-text">Brown</span></div>
           <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
           <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
           <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
@@ -70,12 +70,12 @@
         Size <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
-        <label><input type="checkbox"> <span class="pg-option">XS</span></label>
-        <label><input type="checkbox"> <span class="pg-option">S</span></label>
-        <label><input type="checkbox"> <span class="pg-option">M</span></label>
-        <label><input type="checkbox" checked> <span class="pg-option">L</span></label>
-        <label><input type="checkbox"> <span class="pg-option">XL</span></label>
-        <label><input type="checkbox"> <span class="pg-option">2XL</span></label>
+        <label><input type="checkbox" class="size-checkbox" value="XS"> <span class="pg-option">XS</span></label>
+        <label><input type="checkbox" class="size-checkbox" value="S"> <span class="pg-option">S</span></label>
+        <label><input type="checkbox" class="size-checkbox" value="M"> <span class="pg-option">M</span></label>
+        <label><input type="checkbox" class="size-checkbox" value="L"> <span class="pg-option">L</span></label>
+        <label><input type="checkbox" class="size-checkbox" value="XL"> <span class="pg-option">XL</span></label>
+        <label><input type="checkbox" class="size-checkbox" value="2XL"> <span class="pg-option">2XL</span></label>
       </div>
     </div>
 
@@ -87,9 +87,9 @@
       <div class="pg-filter-body">
         <input type="range" min="0" max="1500" value="1500" class="pg-range">
         <div class="pg-price-inputs">
-          <input type="number" placeholder="₹ 0">
+          <input type="number" id="min-price-box" placeholder="₹ 0">
           <div class="minus"></div>
-          <input type="number" placeholder="₹ 1500">
+          <input type="number" id="max-price-box" placeholder="₹ 1500">
         </div>
       </div>
     </div>

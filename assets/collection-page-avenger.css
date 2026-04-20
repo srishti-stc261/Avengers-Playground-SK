@@ -92,7 +92,23 @@
   letter-spacing: 0%;
   color: rgba(0, 0, 0, 1);
 }
+.pg-colors div .color-bar.black {
+  background: black;
+}
 
+.pg-colors div .color-bar.white {
+  background: whitesmoke;
+}
+
+.pg-colors div .color-bar.blue {
+  background: rgb(56, 72, 105);
+}
+.pg-colors div .color-bar.red {
+  background: rgb(248, 58, 90);
+}
+.pg-colors div .color-bar.brown {
+  background: rgb(110, 59, 70);
+}
 .pg-range {
   width: 100%;
   margin-bottom: 16px;
@@ -122,12 +138,17 @@
   color: rgba(100, 70, 190, 1);
 }
 
+.pg-price-inputs input[type="number"]:focus {
+  outline: 1px solid rgba(100, 70, 190, 1);
+}
+
 .pg-price-inputs .minus {
   border: 1px solid rgba(100, 70, 190, 1);
   height: 0;
   width: 53.18px;
   align-self: center;
 }
+
 .pg-products {
   flex: 1;
   display: grid;
@@ -168,4 +189,18 @@ product-card-avenger .op-card__badge-top-left {
 
 product-card-avenger .op-card__traingle {
   top: -41px;
+}
+
+.skeleton-img {
+  height: 200px;
+  background: #eee;
+  border-radius: 10px;
+}
+.skeleton-text {
+  height: 12px;
+  margin-top: 10px;
+  background: #eee;
+}
+.skeleton-text.small {
+  width: 60%;
 }
