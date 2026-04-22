@@ -255,6 +255,7 @@ const searchResultNavigation = () => {
 
   searchBtn?.addEventListener("click", () => {
     if (!query || query.trim() === "") return;
+    input.value = ""; 
 
     const finalQuery = encodeURIComponent(query.trim());
     console.log("finalquery", finalQuery);

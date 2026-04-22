@@ -204,3 +204,83 @@ product-card-avenger .op-card__traingle {
 .skeleton-text.small {
   width: 60%;
 }
+.pg-active-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 50px;
+  width: 100%;
+}
+
+.pg-chip {
+  padding: 10px 16px;
+  background: rgba(242, 236, 252, 1);
+  font-size: 14px;
+  font-family: "obv-regular";
+  gap: 12px;
+  border-radius: 6px;
+  border-width: stroke weight/1;
+  color: rgba(31, 41, 55, 1);
+  display: flex;
+}
+
+.pg-product-filters {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.chip-close {
+  cursor: pointer;
+}
+
+.pg-pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pg-pagination-wrapper {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pg-pag-btn,
+.pg-pag-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(100, 70, 190, 1);
+  background: white;
+  color: rgba(100, 70, 190, 1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-family: "obv-regular";
+  font-size: 16px;
+  line-height: 105%;
+}
+.pg-pag-number {
+  border: 0.5px solid rgba(196, 178, 230, 1);
+}
+
+.pg-pag-number.active {
+  background: #e9e4ff;
+  border-color: transparent;
+  border: 0.5px solid rgba(196, 178, 230, 1);
+}
+
+.pg-pag-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pg-pag-btn:hover:not(:disabled),
+.pg-pag-number:hover {
+  border-color: #7b61ff;
+  background: #f5f3ff;
+}

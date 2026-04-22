@@ -7,10 +7,10 @@
         Gender <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
-        <label><input type="radio" name="gender" checked> <span class="pg-option">Men</span></label>
-        <label><input type="radio" name="gender"> <span class="pg-option">Women</span></label>
-        <label><input type="radio" name="gender"><span class="pg-option">Boy</span></label>
-        <label><input type="radio" name="gender"><span class="pg-option">Girl</span></label>
+        <label><input type="radio" name="gender" value="men"> <span class="pg-option">Men</span></label>
+        <label><input type="radio" name="gender" value="women"> <span class="pg-option">Women</span></label>
+        <label><input type="radio" name="gender" checked value="all"><span class="pg-option">All</span></label>
+        <label><input type="radio" name="gender" value="girl"><span class="pg-option">Girl</span></label>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
         Availability <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
-        <label><input type="checkbox" checked name="instock"> <span class="pg-option stock">In Stock (25)</span></label>
+        <label><input type="checkbox" name="instock"> <span class="pg-option stock">In Stock</span></label>
         <label><input type="checkbox" name="outofstock"><span class="pg-option stock">Out of Stock</span></label>
       </div>
     </div>
@@ -31,11 +31,26 @@
         Product Type <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
-        <label><input type="checkbox"> <span class="pg-option">Crop Top (25)</span></label>
-        <label><input type="checkbox" checked> <span class="pg-option">Coats (5)</span></label>
-        <label><input type="checkbox" checked> <span class="pg-option">Denim (2)</span></label>
-        <label><input type="checkbox" checked> <span class="pg-option">T-shirts (17)</span></label>
-        <label><input type="checkbox"> <span class="pg-option">Bottom Wear (10)</span></label>
+        <label
+          ><input type="checkbox" class="product-type-checkbox" value="Clothing">
+          <span class="pg-option">Clothing (<span class="pg-count" data-count="Clothing">0</span>)</span></label
+        >
+        <label
+          ><input type="checkbox" class="product-type-checkbox" value="Trouser">
+          <span class="pg-option">Trouser (<span class="pg-count" data-count="Trouser">0</span>)</span></label
+        >
+        <label
+          ><input type="checkbox" class="product-type-checkbox" value="Top">
+          <span class="pg-option">Tops (<span class="pg-count" data-count="Tops">0</span>)</span></label
+        >
+        <label
+          ><input type="checkbox" class="product-type-checkbox" value="T-shirts">
+          <span class="pg-option">T-shirts (<span class="pg-count" data-count="T-shirts">0</span>)</span></label
+        >
+        <label
+          ><input type="checkbox" class="product-type-checkbox" value="Dress">
+          <span class="pg-option">Dresses (<span class="pg-count" data-count="Dress">0</span>)</span></label
+        >
       </div>
     </div>
 
@@ -96,7 +111,11 @@
   </aside>
 
   <!-- PRODUCTS -->
-  <div class="pg-products"></div>
+  <div class="pg-product-filters">
+    <div class="pg-active-filters"></div>
+    <div class="pg-products"></div>
+    <div class="pg-pagination-container"></div>
+  </div>
 </section>
 
 <link rel="stylesheet" href="{{ 'collection-page-avenger.css' | asset_url }}">

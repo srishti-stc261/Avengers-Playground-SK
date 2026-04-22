@@ -1,6 +1,9 @@
 let ALL_PRODUCTS = [];
+let FILTERED_PRODUCTS = [];
+let currentPage = 1;
+const productsPerPage = 12;
 let ACTIVE_FILTERS = {
-  gender: null,
+  gender: "all",
   inStock: false,
   productType: [],
   available: false,
@@ -38,9 +41,10 @@ async function fetchProductsCollectionPage(query) {
   renderProductsCollectionPage(data.products);
   ALL_PRODUCTS = data.products;
   console.log("ALL_PRODUCTS:", ALL_PRODUCTS);
-
+  updateFilterCounts();
   applyFilters();
 }
+
 function renderProductsCollectionPage(products) {
   const grid = document.querySelector(".pg-products");
 
@@ -95,25 +99,43 @@ function applyFilters() {
 
     console.log("Initial:", filtered.length);
 
-    if (ACTIVE_FILTERS.available) {
-    }
+    // 1. GENDER FILTER
+    if (ACTIVE_FILTERS.gender && ACTIVE_FILTERS.gender !== "all") {
+      const g = ACTIVE_FILTERS.gender.toLowerCase();
+      const regex = new RegExp(`\\b${g}\\b`, "i");
+      console.log("before gender, ", filtered);
 
-    if (ACTIVE_FILTERS.gender) {
       filtered = filtered.filter((p) => {
-        const inTags = p.tags?.some((tag) =>
-          tag.toLowerCase().includes(ACTIVE_FILTERS.gender),
-        );
+        const title = p.title || "";
+        const category = p.product_category || "";
+        const tags = p.tags || [];
+        const collections = p.collections?.map((c) => c.title) || [];
 
-        const inCollections = p.collections?.some(
-          (c) =>
-            c.title && c.title.toLowerCase().includes(ACTIVE_FILTERS.gender),
-        );
+        const inTitle = regex.test(title);
+        const inCategory = regex.test(category);
+        const inTags = tags.some((t) => regex.test(t));
+        const inCollections = collections.some((cTitle) => regex.test(cTitle));
 
-        return inTags || inCollections;
+        return inTitle || inCategory || inTags || inCollections;
       });
-
-      console.log("After gender:", filtered.length);
+      console.log("after gender, ", filtered);
     }
+
+    // Product Type Filter
+    if (ACTIVE_FILTERS.productType.length > 0) {
+      filtered = filtered.filter((p) => {
+        const category = (p.product_category || "").toLowerCase();
+        const pType = (p.product_type || "").toLowerCase();
+        const title = (p.title || "").toLowerCase();
+
+        return ACTIVE_FILTERS.productType.some((filterVal) => {
+          const f = filterVal.toLowerCase();
+
+          return pType.includes(f) || category.includes(f) || title.includes(f);
+        });
+      });
+    }
+
     if (ACTIVE_FILTERS.inStock && ACTIVE_FILTERS.outOfStock) {
     } else if (ACTIVE_FILTERS.inStock) {
       filtered = filtered.filter((p) => p.available === true);
@@ -123,21 +145,6 @@ function applyFilters() {
       filtered = filtered.filter((p) => p.available === false);
       console.log("in stock me filtered false vale : ", filtered);
       console.log("After stock:", filtered.length);
-    }
-
-    if (ACTIVE_FILTERS.productType.length) {
-      filtered = filtered.filter((p) => {
-        const type = p.product_type || "";
-        const category = p.product_category || "";
-
-        return ACTIVE_FILTERS.productType.some(
-          (filterType) =>
-            type.toLowerCase().includes(filterType.toLowerCase()) ||
-            category.toLowerCase().includes(filterType.toLowerCase()),
-        );
-      });
-
-      console.log("After type:", filtered.length);
     }
 
     if (ACTIVE_FILTERS.sizes.length > 0) {
@@ -183,7 +190,7 @@ function applyFilters() {
       console.log(`After Color Filter Result:`, filtered.length);
     }
 
-    // Price Filter Logic
+    // Price Filter 
     filtered = filtered.filter((p) => {
       const productPrice = parseFloat(p.price_min);
 
@@ -196,11 +203,86 @@ function applyFilters() {
     console.log("Final:", filtered.length);
 
     renderProductsCollectionPage(filtered);
+    FILTERED_PRODUCTS = filtered;
+    currentPage = 1;
+    renderPaginatedProducts();
   }, 400);
+  renderActiveFilters();
 }
+
+function renderPaginatedProducts() {
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const paginatedItems = FILTERED_PRODUCTS.slice(startIndex, endIndex);
+
+  renderProductsCollectionPage(paginatedItems);
+  renderPaginationControls();
+}
+
+function renderPaginationControls() {
+  const totalPages = Math.ceil(FILTERED_PRODUCTS.length / productsPerPage);
+  const container = document.querySelector(".pg-pagination-container"); 
+
+  if (!container) return;
+  if (totalPages <= 1) {
+    container.innerHTML = "";
+    return;
+  }
+
+  let html = `
+    <div class="pg-pagination-wrapper">
+      <button class="pg-pag-btn prev" ${currentPage === 1 ? "disabled" : ""}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    html += `
+      <button class="pg-pag-number ${i === currentPage ? "active" : ""}" data-page="${i}">
+        ${i}
+      </button>
+    `;
+  }
+
+  html += `
+      <button class="pg-pag-btn next" ${currentPage === totalPages ? "disabled" : ""}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  `;
+
+  container.innerHTML = html;
+
+  // Event Listeners for Pagination
+  container.querySelectorAll(".pg-pag-number").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentPage = parseInt(btn.dataset.page);
+      renderPaginatedProducts();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  container.querySelector(".prev").addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderPaginatedProducts();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  container.querySelector(".next").addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderPaginatedProducts();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+}
+
 document.querySelectorAll('input[name="gender"]').forEach((input) => {
   input.addEventListener("change", (e) => {
     ACTIVE_FILTERS.gender = e.target.value.toLowerCase();
+    console.log("Gender Filter Applied:", ACTIVE_FILTERS.gender);
     applyFilters();
   });
 });
@@ -279,4 +361,169 @@ maxPriceInput?.addEventListener("change", (e) => {
   ACTIVE_FILTERS.maxPrice = val;
   priceRange.value = val;
   applyFilters();
+});
+
+document.querySelectorAll(".product-type-checkbox").forEach((checkbox) => {
+  checkbox.addEventListener("change", (e) => {
+    const val = e.target.value.toLowerCase();
+    if (e.target.checked) {
+      ACTIVE_FILTERS.productType.push(val);
+    } else {
+      ACTIVE_FILTERS.productType = ACTIVE_FILTERS.productType.filter(
+        (t) => t !== val,
+      );
+    }
+    applyFilters();
+  });
+});
+
+function updateFilterCounts() {
+  const counts = {
+    inStock: 0,
+    outOfStock: 0,
+    types: {},
+  };
+
+  ALL_PRODUCTS.forEach((p) => {
+    if (p.available) counts.inStock++;
+    else counts.outOfStock++;
+
+    const type = p.product_type || p.product_category || "Other";
+    counts.types[type] = (counts.types[type] || 0) + 1;
+  });
+
+  const stockLabels = document.querySelectorAll(".pg-option.stock");
+  if (stockLabels[0])
+    stockLabels[0].textContent = `In Stock (${counts.inStock})`;
+  if (stockLabels[1])
+    stockLabels[1].textContent = `Out of Stock (${counts.outOfStock})`;
+
+  document.querySelectorAll(".product-type-checkbox").forEach((input) => {
+    const val = input.value.toLowerCase();
+    const countSpan = input.parentElement.querySelector(".pg-count");
+
+    if (countSpan) {
+      const count = ALL_PRODUCTS.filter((p) => {
+        const pType = (p.product_type || "").toLowerCase();
+        const pCat = (p.product_category || "").toLowerCase();
+        return pType.includes(val) || pCat.includes(val);
+      }).length;
+
+      countSpan.textContent = count;
+    }
+  });
+}
+
+function renderActiveFilters() {
+  const container = document.querySelector(".pg-active-filters");
+  container.innerHTML = "";
+
+  // Gender
+  if (ACTIVE_FILTERS.gender) {
+    addChip("Gender", ACTIVE_FILTERS.gender, () => {
+      ACTIVE_FILTERS.gender = null;
+      document.querySelector('input[value="all"]').checked = true;
+      applyFilters();
+    });
+  }
+
+  // Stock
+  if (ACTIVE_FILTERS.inStock) {
+    addChip("Stock", "In Stock", () => {
+      ACTIVE_FILTERS.inStock = false;
+      document.querySelector('input[name="instock"]').checked = false;
+      applyFilters();
+    });
+  }
+
+  if (ACTIVE_FILTERS.outOfStock) {
+    addChip("Stock", "Out of Stock", () => {
+      ACTIVE_FILTERS.outOfStock = false;
+      document.querySelector('input[name="outofstock"]').checked = false;
+      applyFilters();
+    });
+  }
+
+  // Product Types
+  ACTIVE_FILTERS.productType.forEach((type) => {
+    addChip("Type", type, () => {
+      ACTIVE_FILTERS.productType = ACTIVE_FILTERS.productType.filter(
+        (t) => t !== type,
+      );
+
+      document.querySelectorAll(".product-type-checkbox").forEach((input) => {
+        if (input.value.toLowerCase() === type.toLowerCase()) {
+          input.checked = false;
+        }
+      });
+
+      applyFilters();
+    });
+  });
+
+  // Color
+  if (ACTIVE_FILTERS.color) {
+    addChip("Color", ACTIVE_FILTERS.color, () => {
+      ACTIVE_FILTERS.color = null;
+      document
+        .querySelectorAll(".color-bar")
+        .forEach((b) => b.classList.remove("active"));
+      applyFilters();
+    });
+  }
+  //sizes
+  ACTIVE_FILTERS.sizes.forEach((size) => {
+    addChip("Size", size, () => {
+      ACTIVE_FILTERS.sizes = ACTIVE_FILTERS.sizes.filter((s) => s !== size);
+
+      document.querySelectorAll(".size-checkbox").forEach((input) => {
+        if (input.value === size) {
+          input.checked = false;
+        }
+      });
+
+      applyFilters();
+    });
+  });
+
+  // Price
+  if (ACTIVE_FILTERS.minPrice > 0 || ACTIVE_FILTERS.maxPrice < 1500) {
+    addChip(
+      "Price",
+      `₹${ACTIVE_FILTERS.minPrice} - ₹${ACTIVE_FILTERS.maxPrice}`,
+      () => {
+        ACTIVE_FILTERS.minPrice = 0;
+        ACTIVE_FILTERS.maxPrice = 1500;
+        //ui reset
+        document.querySelector("#min-price-box").value = "";
+        document.querySelector("#max-price-box").value = "";
+
+        // range slider reset
+        document.querySelector(".pg-range").value = 1500;
+
+        applyFilters();
+      },
+    );
+  }
+
+  function addChip(label, value, onRemove) {
+    const chip = document.createElement("div");
+    chip.className = "pg-chip";
+    chip.innerHTML = `
+     <span>${value}</span> <span class="chip-close"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.9497 7.05027L7.05025 16.9498M16.9497 16.9498L7.05025 7.05027" stroke="#1F2937" stroke-width="1.5" stroke-linejoin="round"/>
+</svg></span>
+
+    `;
+    chip.querySelector(".chip-close").addEventListener("click", (e) => {
+      e.stopPropagation();
+      onRemove();
+    });
+    container.appendChild(chip);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const allRadio = document.querySelector('input[name="gender"][value="all"]');
+  if (allRadio) allRadio.checked = true;
 });
