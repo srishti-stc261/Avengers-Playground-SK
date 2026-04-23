@@ -26,6 +26,7 @@
   letter-spacing: 0%;
   color: rgba(31, 41, 55, 1);
   margin-bottom: 12px;
+  align-items: center;
 }
 
 .pg-filter-body {
@@ -283,4 +284,24 @@ product-card-avenger .op-card__traingle {
 .pg-pag-number:hover {
   border-color: #7b61ff;
   background: #f5f3ff;
+}
+
+.pg-filter-count {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 1);
+  color: #fff;
+  font-size: 12px;
+  margin-left: 8px;
+  font-family: "obv-regular";
+}
+
+.pg-filter-header .filter-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

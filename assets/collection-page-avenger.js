@@ -190,7 +190,7 @@ function applyFilters() {
       console.log(`After Color Filter Result:`, filtered.length);
     }
 
-    // Price Filter 
+    // Price Filter
     filtered = filtered.filter((p) => {
       const productPrice = parseFloat(p.price_min);
 
@@ -208,6 +208,7 @@ function applyFilters() {
     renderPaginatedProducts();
   }, 400);
   renderActiveFilters();
+  updateSelectedFilterCounts();
 }
 
 function renderPaginatedProducts() {
@@ -221,7 +222,7 @@ function renderPaginatedProducts() {
 
 function renderPaginationControls() {
   const totalPages = Math.ceil(FILTERED_PRODUCTS.length / productsPerPage);
-  const container = document.querySelector(".pg-pagination-container"); 
+  const container = document.querySelector(".pg-pagination-container");
 
   if (!container) return;
   if (totalPages <= 1) {
@@ -527,3 +528,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const allRadio = document.querySelector('input[name="gender"][value="all"]');
   if (allRadio) allRadio.checked = true;
 });
+
+function updateSelectedFilterCounts() {
+  document.querySelectorAll(".pg-filter").forEach((filter) => {
+    const type = filter.dataset.filter;
+    const badge = filter.querySelector(".pg-filter-count");
+
+    let count = 0;
+
+    switch (type) {
+      case "gender":
+        count = ACTIVE_FILTERS.gender ? 1 : 0;
+        break;
+
+      case "availability":
+        count =
+          (ACTIVE_FILTERS.inStock ? 1 : 0) +
+          (ACTIVE_FILTERS.outOfStock ? 1 : 0);
+        break;
+
+      case "productType":
+        count = ACTIVE_FILTERS.productType.length;
+        break;
+
+      case "size":
+        count = ACTIVE_FILTERS.sizes.length;
+        break;
+
+      case "color":
+        count = ACTIVE_FILTERS.color ? 1 : 0;
+        break;
+    }
+
+    if (badge) {
+      badge.textContent = count;
+      badge.style.display = "inline-flex";
+    }
+  });
+}

@@ -2,9 +2,13 @@
   <!-- SIDEBAR -->
   <aside class="pg-sidebar">
     <!-- Gender -->
-    <div class="pg-filter">
+    <div class="pg-filter" data-filter="gender">
       <div class="pg-filter-header">
-        Gender <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+        <div class="filter-box">
+        Gender 
+        <span class="pg-filter-count"></span>
+        </div>
+        <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
         <label><input type="radio" name="gender" value="men"> <span class="pg-option">Men</span></label>
@@ -15,9 +19,13 @@
     </div>
 
     <!-- Availability -->
-    <div class="pg-filter">
+    <div class="pg-filter" data-filter="availability">
       <div class="pg-filter-header">
-        Availability <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+         <div class="filter-box">
+        Availability 
+        <span class="pg-filter-count"></span>
+         </div>
+        <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
         <label><input type="checkbox" name="instock"> <span class="pg-option stock">In Stock</span></label>
@@ -26,9 +34,13 @@
     </div>
 
     <!-- Product Type -->
-    <div class="pg-filter">
+    <div class="pg-filter" data-filter="productType">
       <div class="pg-filter-header">
-        Product Type <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+          <div class="filter-box">
+        Product Type 
+        <span class="pg-filter-count"></span>
+          </div>
+        <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
         <label
@@ -55,9 +67,13 @@
     </div>
 
     <!-- Color -->
-    <div class="pg-filter">
+    <div class="pg-filter" data-filter="color">
       <div class="pg-filter-header">
-        Color <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+          <div class="filter-box">
+        Color 
+        <span class="pg-filter-count"></span>
+          </div>
+        <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
         <div class="pg-colors">
@@ -80,9 +96,13 @@
     </div>
 
     <!-- Size -->
-    <div class="pg-filter">
+    <div class="pg-filter" data-filter="size">
       <div class="pg-filter-header">
-        Size <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+          <div class="filter-box">
+        Size 
+        <span class="pg-filter-count"></span>
+          </div>
+        <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
         <label><input type="checkbox" class="size-checkbox" value="XS"> <span class="pg-option">XS</span></label>
@@ -95,9 +115,10 @@
     </div>
 
     <!-- Price -->
-    <div class="pg-filter">
+    <div class="pg-filter" data-filter="price">
       <div class="pg-filter-header">
-        Price <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
+        Price 
+        <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
       </div>
       <div class="pg-filter-body">
         <input type="range" min="0" max="1500" value="1500" class="pg-range">
