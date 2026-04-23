@@ -91,9 +91,13 @@
   line-height: 150%;
   letter-spacing: 0%;
   color: rgba(109, 114, 128, 1);
+  cursor: pointer;
 }
 
 .sh-dr-tag-list li.active {
+  color: #6446be;
+}
+.sh-dr-tag-list li:hover {
   color: #6446be;
 }
 .sh-dr-product-row {

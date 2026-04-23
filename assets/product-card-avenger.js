@@ -41,7 +41,9 @@ class ProductCardAvenger extends HTMLElement {
     }
 
     price.textContent = `₹${priceValue}`;
-    oldPrice.textContent = `₹${comparePriceValue}`;
+    if (comparePriceValue) {
+      oldPrice.textContent = `₹${comparePriceValue}`;
+    }
 
     if (comparePriceValue && comparePriceValue > priceValue) {
       const discountPercent = Math.round(

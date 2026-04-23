@@ -115,6 +115,26 @@ document.addEventListener("DOMContentLoaded", async function () {
   response.products.forEach((item) => {
     const li = document.createElement("li");
     li.textContent = item.title;
+
+    li.addEventListener("click", () => {
+      const input = wrapper?.querySelector(".sk-search-input");
+      const placeholder = wrapper?.querySelector(".sk-search-placeholder");
+      const crossIcon = wrapper?.querySelector(".svg-icon-sk");
+
+      input?.classList.add("active");
+      placeholder?.classList.add("hide");
+      crossIcon?.classList.add("active");
+
+      input.value = item.title;
+      input.focus();
+
+      query = item.title;
+      page = 1;
+
+      showResults();
+      fetchProducts(query, page, true);
+    });
+
     list.appendChild(li);
   });
 });
@@ -255,7 +275,7 @@ const searchResultNavigation = () => {
 
   searchBtn?.addEventListener("click", () => {
     if (!query || query.trim() === "") return;
-    input.value = ""; 
+    input.value = "";
 
     const finalQuery = encodeURIComponent(query.trim());
     console.log("finalquery", finalQuery);
