@@ -1,4 +1,4 @@
-<div class="sk-search" role="search">
+<div class="sk-search {% if is_drawer %}drawer-search{% endif %}" role="search">
   {% assign is_drawer = is_drawer | default: false %}
   <div
     id="skSearchOpen"
@@ -32,147 +32,180 @@
   </div>
 </div>
 <style>
-  @font-face {
-    font-family: 'obv-regular';
-    src: url('{{ "fonnts.com-Obviously.otf" | asset_url }}') format('opentype');
-    font-display: swap;
-  }
-  :root {
-    --sk-border: rgba(210, 213, 218, 1);
-  }
-
-  .sk-search {
-    width: 386px;
-  }
-
-  .sk-search-trigger {
-    width: 100%;
-    border-radius: 999px;
-    border: 1px solid var(--sk-border);
-    background: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    overflow: hidden;
-    justify-content: flex-start;
-  }
-
-  .sk-search-icon {
-    color: gray;
-    flex-grow: 1;
-  }
-
-  .sk-search-icon svg {
-    height: 24px;
-    width: 24px;
-  }
-
-  .sk-search-placeholder {
-    color: #666;
-    font-size: 14px;
-    font-family: 'obv-regular';
-    font-weight: 400;
-    font-size: 14px;
-    leading-trim: NONE;
-    line-height: 150%;
-    letter-spacing: 0%;
-    margin: 0;
-  }
-
-  .static-text {
-    color: rgba(156, 163, 175, 1);
-    padding: 0;
-    margin: 0;
-    display: inline-flex;
-  }
-
-  .dynamic-wrapper {
-    display: inline-block;
-    height: 1.6em;
-    overflow: hidden;
-    vertical-align: bottom;
-    position: relative;
-  }
-
-  .dynamic-track {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    margin: 0;
-    animation: stepSmooth 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-    will-change: transform;
-  }
-  .dynamic-track span {
-    height: 1.6em;
-    display: flex;
-    align-items: center;
-    color: rgba(0, 0, 0, 1);
-    padding: 0;
-  }
-
-  @keyframes stepSmooth {
-    0%,
-    30% {
-      transform: translateY(0);
+    @font-face {
+      font-family: 'obv-regular';
+      src: url('{{ "fonnts.com-Obviously.otf" | asset_url }}') format('opentype');
+      font-display: swap;
+    }
+    :root {
+      --sk-border: rgba(210, 213, 218, 1);
     }
 
-    40%,
-    60% {
-      transform: translateY(-1.6em);
+    .sk-search {
+      width: 386px;
     }
 
-    70%,
-    100% {
-      transform: translateY(-3.2em);
+    .sk-search-trigger {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--sk-border);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow: hidden;
+      justify-content: flex-start;
     }
-  }
 
-  .sk-search-input {
-    height: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 14px;
-    font-family: 'obv-regular';
-    z-index: 2;
-    display: none;
-  }
+    .sk-search-icon {
+      color: gray;
+      flex-grow: 1;
+    }
 
-  .sk-search-input.active {
-    display: block;
-    width: 100%;
-  }
+    .sk-search-icon svg {
+      height: 24px;
+      width: 24px;
+    }
 
-  .sk-search-placeholder.hide {
-    display: none;
-    cursor: text;
-  }
+    .sk-search-placeholder {
+      color: #666;
+      font-size: 14px;
+      font-family: 'obv-regular';
+      font-weight: 400;
+      font-size: 14px;
+      leading-trim: NONE;
+      line-height: 150%;
+      letter-spacing: 0%;
+      margin: 0;
+    }
 
-  .inputBoxDiv {
-    display: flex;
-    justify-content: space-between;
-    flex-grow: 300;
-  }
+    .static-text {
+      color: rgba(156, 163, 175, 1);
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+    }
 
-  .svg-icon-sk {
-    display: none;
-    align-self: center;
-    cursor: pointer;
-  }
-  .svg-icon-sk svg {
-    width: 12px;
-    height: 12px;
-  }
+    .dynamic-wrapper {
+      display: inline-block;
+      height: 1.6em;
+      overflow: hidden;
+      vertical-align: bottom;
+      position: relative;
+    }
 
-  .svg-icon-sk.active {
-    display: flex;
+    .dynamic-track {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+      animation: stepSmooth 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      will-change: transform;
+    }
+    .dynamic-track span {
+      height: 1.6em;
+      display: flex;
+      align-items: center;
+      color: rgba(0, 0, 0, 1);
+      padding: 0;
+    }
+
+    @keyframes stepSmooth {
+      0%,
+      30% {
+        transform: translateY(0);
+      }
+
+      40%,
+      60% {
+        transform: translateY(-1.6em);
+      }
+
+      70%,
+      100% {
+        transform: translateY(-3.2em);
+      }
+    }
+
+    .sk-search-input {
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      font-family: 'obv-regular';
+      z-index: 2;
+      display: none;
+    }
+
+    .sk-search-input.active {
+      display: block;
+      width: 100%;
+    }
+
+    .sk-search-placeholder.hide {
+      display: none;
+      cursor: text;
+    }
+
+    .inputBoxDiv {
+      display: flex;
+      justify-content: space-between;
+      flex-grow: 300;
+    }
+
+    .svg-icon-sk {
+      display: none;
+      align-self: center;
+      cursor: pointer;
+    }
+    .svg-icon-sk svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .svg-icon-sk.active {
+      display: flex;
+    }
+
+  @media screen and (max-width: 428px) {
+    .sk-search {
+      width: auto;
+    }
+
+    .sk-search:not(.drawer-search) .sk-search-trigger {
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+      border: none;
+    }
+
+    .sk-search:not(.drawer-search) .inputBoxDiv {
+      display: none;
+    }
+
+    .sk-search:not(.drawer-search) .sk-search-icon {
+      flex-grow: 0;
+    }
+
+    .sk-search.drawer-search .inputBoxDiv {
+      display: flex;
+    }
+
+    .sk-search.drawer-search .sk-search-trigger {
+      width: 100%;
+      border-radius: 999px;
+      padding: 12px 16px;
+    }
   }
 </style>
 
 <script>
-function openSearchDrawer() {
-  console.log("drawer khulega");
-  document.querySelector(".sh-dr-modal-wrapper").classList.add("open")
-}
+  function openSearchDrawer() {
+    console.log('drawer khulega');
+    document.querySelector('.sh-dr-modal-wrapper').classList.add('open');
+  }
 </script>

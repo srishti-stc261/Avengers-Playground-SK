@@ -1,5 +1,6 @@
 let ALL_PRODUCTS = [];
 let FILTERED_PRODUCTS = [];
+let IS_MOBILE = window.innerWidth <= 428;
 let currentPage = 1;
 const productsPerPage = 12;
 let ACTIVE_FILTERS = {
@@ -13,6 +14,7 @@ let ACTIVE_FILTERS = {
   minPrice: 0,
   maxPrice: 15000,
 };
+let TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
 
 document.querySelectorAll(".pg-filter-header").forEach((header) => {
   header.addEventListener("click", () => {
@@ -282,23 +284,43 @@ function renderPaginationControls() {
 
 document.querySelectorAll('input[name="gender"]').forEach((input) => {
   input.addEventListener("change", (e) => {
-    ACTIVE_FILTERS.gender = e.target.value.toLowerCase();
-    console.log("Gender Filter Applied:", ACTIVE_FILTERS.gender);
-    applyFilters();
+    const value = e.target.value.toLowerCase();
+
+    if (IS_MOBILE) {
+      TEMP_FILTERS.gender = value;
+      console.log("Gender Filter Applied mobile:", TEMP_FILTERS.gender);
+    } else {
+      ACTIVE_FILTERS.gender = value;
+      console.log("Gender Filter Applied desktop:", ACTIVE_FILTERS.gender);
+      applyFilters();
+    }
   });
 });
 
 document.querySelectorAll('input[name="instock"]').forEach((input) => {
   input.addEventListener("change", (e) => {
-    ACTIVE_FILTERS.inStock = e.target.checked;
-    applyFilters();
+    if (IS_MOBILE) {
+      TEMP_FILTERS.inStock = e.target.checked;
+      console.log("In Stock Filter Applied mobile:", TEMP_FILTERS.inStock);
+    } else {
+      ACTIVE_FILTERS.inStock = e.target.checked;
+      applyFilters();
+    }
   });
 });
 
 document.querySelectorAll('input[name="outofstock"]').forEach((input) => {
   input.addEventListener("change", (e) => {
-    ACTIVE_FILTERS.outOfStock = e.target.checked;
-    applyFilters();
+    if (IS_MOBILE) {
+      TEMP_FILTERS.outOfStock = e.target.checked;
+      console.log(
+        "Out of Stock Filter Applied mobile:",
+        TEMP_FILTERS.outOfStock,
+      );
+    } else {
+      ACTIVE_FILTERS.outOfStock = e.target.checked;
+      applyFilters();
+    }
   });
 });
 
@@ -306,14 +328,24 @@ document.querySelectorAll(".size-checkbox").forEach((checkbox) => {
   checkbox.addEventListener("change", (e) => {
     const val = e.target.value;
 
-    if (e.target.checked) {
-      ACTIVE_FILTERS.sizes.push(val);
-    } else {
-      ACTIVE_FILTERS.sizes = ACTIVE_FILTERS.sizes.filter((s) => s !== val);
-    }
+    if (IS_MOBILE) {
+      if (e.target.checked) {
+        TEMP_FILTERS.sizes.push(val);
+      } else {
+        TEMP_FILTERS.sizes = TEMP_FILTERS.sizes.filter((s) => s !== val);
+      }
 
-    console.log("Selected Sizes Array:", ACTIVE_FILTERS.sizes);
-    applyFilters();
+      console.log("TEMP Sizes:", TEMP_FILTERS.sizes);
+    } else {
+      if (e.target.checked) {
+        ACTIVE_FILTERS.sizes.push(val);
+      } else {
+        ACTIVE_FILTERS.sizes = ACTIVE_FILTERS.sizes.filter((s) => s !== val);
+      }
+
+      console.log("ACTIVE Sizes:", ACTIVE_FILTERS.sizes);
+      applyFilters();
+    }
   });
 });
 
@@ -328,12 +360,21 @@ colorBars.forEach((bar) => {
 
     if (!isAlreadyActive) {
       bar.classList.add("active");
-      ACTIVE_FILTERS.color = selectedColor;
-    } else {
-      ACTIVE_FILTERS.color = null;
-    }
 
-    applyFilters();
+      if (IS_MOBILE) {
+        TEMP_FILTERS.color = selectedColor;
+      } else {
+        ACTIVE_FILTERS.color = selectedColor;
+        applyFilters();
+      }
+    } else {
+      if (IS_MOBILE) {
+        TEMP_FILTERS.color = null;
+      } else {
+        ACTIVE_FILTERS.color = null;
+        applyFilters();
+      }
+    }
   });
 });
 
@@ -347,34 +388,66 @@ const maxPriceInput = document.querySelector(
 
 // on change of slider
 priceRange?.addEventListener("input", (e) => {
-  ACTIVE_FILTERS.maxPrice = parseFloat(e.target.value);
-  maxPriceInput.value = e.target.value;
-  applyFilters();
+  const val = parseFloat(e.target.value);
+  maxPriceInput.value = val;
+
+  if (IS_MOBILE) {
+    TEMP_FILTERS.maxPrice = val;
+  } else {
+    ACTIVE_FILTERS.maxPrice = val;
+    applyFilters();
+  }
 });
 
 minPriceInput?.addEventListener("change", (e) => {
-  ACTIVE_FILTERS.minPrice = parseFloat(e.target.value) || 0;
-  applyFilters();
+  const val = parseFloat(e.target.value) || 0;
+
+  if (IS_MOBILE) {
+    TEMP_FILTERS.minPrice = val;
+  } else {
+    ACTIVE_FILTERS.minPrice = val;
+    applyFilters();
+  }
 });
 
 maxPriceInput?.addEventListener("change", (e) => {
   const val = parseFloat(e.target.value) || 1500;
-  ACTIVE_FILTERS.maxPrice = val;
   priceRange.value = val;
-  applyFilters();
+
+  if (IS_MOBILE) {
+    TEMP_FILTERS.maxPrice = val;
+  } else {
+    ACTIVE_FILTERS.maxPrice = val;
+    applyFilters();
+  }
 });
 
 document.querySelectorAll(".product-type-checkbox").forEach((checkbox) => {
   checkbox.addEventListener("change", (e) => {
     const val = e.target.value.toLowerCase();
-    if (e.target.checked) {
-      ACTIVE_FILTERS.productType.push(val);
+
+    if (IS_MOBILE) {
+      if (e.target.checked) {
+        TEMP_FILTERS.productType.push(val);
+      } else {
+        TEMP_FILTERS.productType = TEMP_FILTERS.productType.filter(
+          (t) => t !== val,
+        );
+      }
+
+      console.log("TEMP Product Types:", TEMP_FILTERS.productType);
     } else {
-      ACTIVE_FILTERS.productType = ACTIVE_FILTERS.productType.filter(
-        (t) => t !== val,
-      );
+      if (e.target.checked) {
+        ACTIVE_FILTERS.productType.push(val);
+      } else {
+        ACTIVE_FILTERS.productType = ACTIVE_FILTERS.productType.filter(
+          (t) => t !== val,
+        );
+      }
+
+      console.log("ACTIVE Product Types:", ACTIVE_FILTERS.productType);
+      applyFilters();
     }
-    applyFilters();
   });
 });
 
@@ -566,3 +639,86 @@ function updateSelectedFilterCounts() {
     }
   });
 }
+
+window.addEventListener("resize", () => {
+  IS_MOBILE = window.innerWidth <= 428;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.querySelector(".pg-sidebar");
+  const overlay = document.querySelector(".pg-overlay");
+  const filterBtn = document.getElementById("mobileFilter");
+  const mobileBar = document.querySelector(".pg-mobile-bar");
+
+  if (!sidebar || !filterBtn) return;
+
+  // OPEN
+  filterBtn.addEventListener("click", () => {
+    TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
+    sidebar.classList.remove("closing");
+    sidebar.classList.add("open");
+    overlay.classList.add("active");
+    mobileBar.style.display = "none";
+  });
+
+  // CLOSE
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    sidebar.classList.add("closing");
+
+    overlay.classList.remove("active");
+    mobileBar.style.display = "flex";
+
+    setTimeout(() => {
+      sidebar.classList.remove("closing");
+    }, 400);
+  });
+});
+
+document.querySelector(".pg-apply-btn").addEventListener("click", () => {
+  ACTIVE_FILTERS = JSON.parse(JSON.stringify(TEMP_FILTERS));
+  applyFilters();
+
+  // close sidebar
+  document.querySelector(".pg-sidebar").classList.remove("open");
+  document.querySelector(".pg-overlay").classList.remove("active");
+  document.querySelector(".pg-mobile-bar").style.display = "flex";
+});
+
+document.querySelector(".pg-clear-btn").addEventListener("click", () => {
+  TEMP_FILTERS = {
+    gender: "all",
+    inStock: false,
+    productType: [],
+    available: false,
+    outOfStock: false,
+    sizes: [],
+    color: null,
+    minPrice: 0,
+    maxPrice: 15000,
+  };
+
+  ACTIVE_FILTERS = JSON.parse(JSON.stringify(TEMP_FILTERS));
+
+  // UI reset
+  document
+    .querySelectorAll("input[type='checkbox'], input[type='radio']")
+    .forEach((input) => (input.checked = false));
+
+  document.querySelector('input[value="all"]').checked = true;
+
+  document
+    .querySelectorAll(".color-bar")
+    .forEach((b) => b.classList.remove("active"));
+
+  document.querySelector("#min-price-box").value = "";
+  document.querySelector("#max-price-box").value = "";
+  document.querySelector(".pg-range").value = 1500;
+
+  applyFilters();
+
+  // close sidebar
+  document.querySelector(".pg-sidebar").classList.remove("open");
+  document.querySelector(".pg-overlay").classList.remove("active");
+  document.querySelector(".pg-mobile-bar").style.display = "flex";
+});
