@@ -298,6 +298,7 @@ product-card-avenger .op-card__traingle {
   font-size: 12px;
   margin-left: 8px;
   font-family: "obv-regular";
+  padding: 1px 0 3.7px 0;
 }
 
 .pg-filter-header .filter-box {
