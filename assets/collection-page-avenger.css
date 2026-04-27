@@ -13,6 +13,11 @@
   flex-direction: column;
   display: flex;
 }
+.pg-sidebar-content {
+  gap: 20px;
+  flex-direction: column;
+  display: flex;
+}
 
 .pg-filter {
   border-bottom: 1px solid rgba(235, 235, 235, 1);
@@ -330,24 +335,39 @@ product-card-avenger .op-card__traingle {
   }
 
   .filter-heading-mobile {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     border-bottom: 1px solid rgb(161, 160, 160);
-    z-index: 10001; /* above sidebar content */
+    z-index: 10001;
     border-radius: 12px 12px 0 0;
+    color: rgba(50, 30, 90, 1);
+    padding: 15px 16px;
     font-family: "obv-med";
-    font-weight: 500;
-    font-size: 18px;
+    font-size: 12px;
     line-height: 150%;
-    color: rgba(31, 41, 55, 1);
-    padding: 12px 16px;
+    letter-spacing: 0%;
   }
 
   .pg-sidebar {
     display: none;
+  }
+
+  .showw {
+    display: flex;
+  }
+
+  .hidee {
+    display: none;
+  }
+
+  .bottom-btns button:hover {
+    background-color: #6446be;
+    color: white;
   }
 
   .pg-sidebar.open,
@@ -366,10 +386,27 @@ product-card-avenger .op-card__traingle {
     padding-top: 60px;
   }
 
+  .pg-sidebar.full {
+    height: 85%;
+  }
+
+  .pg-sidebar.half {
+    height: 30%;
+  }
+
+  .no-border {
+    border-bottom: none !important;
+  }
+
+  .pg-filter.hidden {
+    display: none;
+  }
+
   .pg-sidebar-content {
     height: calc(100% - 60px);
     overflow-y: auto;
-    padding: 16px;
+    padding-top: 18px;
+    gap: 16px;
   }
 
   .pg-sidebar.open {
@@ -442,7 +479,6 @@ product-card-avenger .op-card__traingle {
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #fff;
     padding: 12px 16px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 10002;
@@ -455,5 +491,73 @@ product-card-avenger .op-card__traingle {
     padding-left: 14px;
     border-radius: 8px;
     flex: 1;
+    border: 1px solid rgba(100, 70, 190, 1);
+    color: rgba(100, 70, 190, 1);
+    font-family: "obv-narrow-semi";
+    font-size: 14px;
+    background: white;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: uppercase;
+  }
+  product-card-avenger .op-card__badge-top-left {
+    font-size: 10px;
+  }
+  product-card-avenger .op-card__price-current {
+    font-size: 16px;
+  }
+  product-card-avenger .op-card__price-old {
+    font-size: 12px;
+  }
+
+  product-card-avenger .op-card__discount-text {
+    font-size: 12px;
+  }
+  .pg-pag-btn,
+  .pg-pag-number {
+    width: 26px;
+    height: 26px;
+  }
+
+  .pg-pag-number {
+    padding: 8px 8px 10px 8px;
+    font-size: 12px;
+  }
+  .pg-pag-btn {
+    font-size: 14px;
+  }
+  .pg-pagination-container {
+    margin-top: 0;
+  }
+  .pg-pagination-wrapper {
+    margin-top: 16px;
+  }
+  .pg-filter-header {
+    font-size: 14px;
+  }
+  .pg-filter-body label .pg-option {
+    font-size: 12px;
+  }
+  .pg-filter-body label {
+    margin-bottom: 8px;
+  }
+  .pg-filter-count {
+    min-width: 20px;
+    height: 20px;
+    padding: 1px 0 4px;
+    font-size: 12px;
+  }
+  .pg-filter-body input[type="checkbox"],
+  .pg-filter-body input[type="radio"] {
+    width: 14px;
+    height: 14px;
+  }
+  product-card-avenger .op-card__traingle {
+    top: -46px;
+  }
+  .pg-range {
+    width: 98%;
   }
 }

@@ -286,14 +286,9 @@ document.querySelectorAll('input[name="gender"]').forEach((input) => {
   input.addEventListener("change", (e) => {
     const value = e.target.value.toLowerCase();
 
-    if (IS_MOBILE) {
-      TEMP_FILTERS.gender = value;
-      console.log("Gender Filter Applied mobile:", TEMP_FILTERS.gender);
-    } else {
-      ACTIVE_FILTERS.gender = value;
-      console.log("Gender Filter Applied desktop:", ACTIVE_FILTERS.gender);
-      applyFilters();
-    }
+    ACTIVE_FILTERS.gender = value;
+    console.log("Gender Filter Applied desktop:", ACTIVE_FILTERS.gender);
+    applyFilters();
   });
 });
 
@@ -648,17 +643,48 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.querySelector(".pg-sidebar");
   const overlay = document.querySelector(".pg-overlay");
   const filterBtn = document.getElementById("mobileFilter");
+  const genderFilterBtn = document.getElementById("genderFilter");
   const mobileBar = document.querySelector(".pg-mobile-bar");
+  const gender = document.getElementById("genderBtn");
+  const allFilters = document.querySelectorAll(".pg-filter");
+  const bottomBtns = document.querySelector(".bottom-btns");
+  const genderHead = document.getElementById("gender-head");
+  const headingFilter = document.querySelector(".headingF");
+
 
   if (!sidebar || !filterBtn) return;
 
   // OPEN
   filterBtn.addEventListener("click", () => {
-    TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
+    allFilters.forEach((f) => f.classList.remove("hidden"));
+    bottomBtns.style.display = "flex";
+    headingFilter.textContent = "Filters";
+    gender.classList.add("hidden");
+
     sidebar.classList.remove("closing");
     sidebar.classList.add("open");
+    sidebar.classList.add("full");
+    sidebar.classList.remove("half");
+
     overlay.classList.add("active");
     mobileBar.style.display = "none";
+  });
+
+  genderFilterBtn.addEventListener("click", () => {
+    TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
+
+    allFilters.forEach((f) => f.classList.add("hidden"));
+    gender.classList.remove("hidden");
+    sidebar.classList.add("half");
+    sidebar.classList.remove("full");
+    sidebar.classList.remove("closing");
+    sidebar.classList.add("open");
+    gender.classList.add("no-border");
+    genderHead.classList.add("hidee");
+    headingFilter.textContent = "GENDER";
+    overlay.classList.add("active");
+    mobileBar.style.display = "none";
+    bottomBtns.style.display = "none";
   });
 
   // CLOSE
@@ -678,7 +704,6 @@ document.addEventListener("DOMContentLoaded", () => {
 document.querySelector(".pg-apply-btn").addEventListener("click", () => {
   ACTIVE_FILTERS = JSON.parse(JSON.stringify(TEMP_FILTERS));
   applyFilters();
-
   // close sidebar
   document.querySelector(".pg-sidebar").classList.remove("open");
   document.querySelector(".pg-overlay").classList.remove("active");
@@ -721,4 +746,21 @@ document.querySelector(".pg-clear-btn").addEventListener("click", () => {
   document.querySelector(".pg-sidebar").classList.remove("open");
   document.querySelector(".pg-overlay").classList.remove("active");
   document.querySelector(".pg-mobile-bar").style.display = "flex";
+});
+
+const crossSvg = document.querySelector(".filter-heading-mobile svg");
+crossSvg.addEventListener("click", () => {
+  const sidebar = document.querySelector(".pg-sidebar");
+  const overlay = document.querySelector(".pg-overlay");
+  const mobileBar = document.querySelector(".pg-mobile-bar");
+
+  sidebar.classList.remove("open");
+  sidebar.classList.add("closing");
+
+  overlay.classList.remove("active");
+  mobileBar.style.display = "flex";
+
+  setTimeout(() => {
+    sidebar.classList.remove("closing");
+  }, 400);
 });

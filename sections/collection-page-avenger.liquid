@@ -1,11 +1,13 @@
 <section class="pg-container">
   <!-- SIDEBAR -->
   <aside class="pg-sidebar">
-    <div class="filter-heading-mobile">Filters</div>
+    <div class="filter-heading-mobile">
+      <span class="headingF">Filters</span> <span>{{ 'filter-cross.svg' | inline_asset_content }}</span>
+    </div>
     <div class="pg-sidebar-content">
       <!-- Gender -->
-      <div class="pg-filter" data-filter="gender">
-        <div class="pg-filter-header">
+      <div class="pg-filter" data-filter="gender" id="genderBtn">
+        <div class="pg-filter-header" id="gender-head">
           <div class="filter-box">
             Gender
             <span class="pg-filter-count"></span>
@@ -149,7 +151,7 @@
 
 <div class="pg-mobile-bar">
   <div class="pg-mobile-btn" id="mobileFilter">FILTER</div>
-  <div class="pg-mobile-btn">SORT</div>
+  <div class="pg-mobile-btn" id="genderFilter">GENDER</div>
 </div>
 
 <link rel="stylesheet" href="{{ 'collection-page-avenger.css' | asset_url }}">
