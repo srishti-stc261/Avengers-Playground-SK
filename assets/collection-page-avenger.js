@@ -1,9 +1,6 @@
 let ALL_PRODUCTS = [];
-let FILTERED_PRODUCTS = [];
-let TOTAL_PRODUCTS = 0;
-let IS_MOBILE = window.innerWidth <= 428;
-let currentPage = 1;
-const productsPerPage = 12;
+let PRICE_MAX_DEFAULT = 15000;
+let PRICE_MIN_DEFAULT = 0;
 let ACTIVE_FILTERS = {
   gender: "all",
   inStock: false,
@@ -12,10 +9,20 @@ let ACTIVE_FILTERS = {
   outOfStock: false,
   sizes: [],
   color: null,
-  minPrice: 0,
-  maxPrice: 15000,
+  minPrice: PRICE_MIN_DEFAULT,
+  maxPrice: PRICE_MAX_DEFAULT,
 };
+
+let FILTERED_PRODUCTS = [];
+let TOTAL_PRODUCTS = 0;
+let IS_MOBILE = window.innerWidth <= 428;
+let currentPage = 1;
+const productsPerPage = 12;
+
 let TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
+let mobileSidebarReady = false;
+let priceEventsReady = false;
+const ARROW_ICON = document.getElementById("arrow-icon-tpl")?.innerHTML || "▼";
 
 document.querySelectorAll(".pg-filter-header").forEach((header) => {
   header.addEventListener("click", () => {
@@ -33,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     params.has("pf_opt_size[]") ||
     params.has("pf_pt_product_type[]") ||
     params.has("pf_t_tag[]") ||
-    params.has("pf_st_available") ||
+    params.has("pf_st_stock_status[]") ||
     params.has("pf_p_price");
 
   if (hasAnyFilterParam) {
@@ -64,9 +71,9 @@ function restoreFiltersFromURL(params) {
   }
 
   // Availability
-  const avail = params.get("pf_st_available");
-  if (avail === "true") ACTIVE_FILTERS.inStock = true;
-  if (avail === "false") ACTIVE_FILTERS.outOfStock = true;
+  const stockVals = params.getAll("pf_st_stock_status[]");
+  if (stockVals.includes("true")) ACTIVE_FILTERS.inStock = true;
+  if (stockVals.includes("false")) ACTIVE_FILTERS.outOfStock = true;
 
   // Gender (stored as tag)
   const tags = params.getAll("pf_t_tag[]");
@@ -168,18 +175,52 @@ function showSkeleton() {
 async function applyFilters(resetPage = true) {
   if (resetPage) currentPage = 1;
   showSkeleton();
+  showFilterSkeleton(); // ← filter skeleton bhi dikhao
   updateURL();
 
   const query = new URLSearchParams(window.location.search).get("q") || "";
-  const params = buildBoostParams(query); 
+  const params = buildBoostParams(query);
   const url = `https://services.mybcapps.com/bc-sf-filter/search?${params}`;
 
   const res = await fetch(url);
   const data = await res.json();
+  console.log("FULL DATA:", data);
+  console.log("FILTER:", data.filter);
+  console.log("OPTIONS FULL:", JSON.stringify(data.filter.options));
 
   TOTAL_PRODUCTS =
     data.total_product || data.total || data.products?.length || 0;
   FILTERED_PRODUCTS = data.products || [];
+
+  // ← YE ADD KAR — filter tree bhi aa gaya same response mein
+  if (data.filter && data.filter.options) {
+    // Ye order define karo
+    const FILTER_ORDER = [
+      "tag",
+      "stock",
+      "product_type",
+      "opt_size",
+      "opt_color",
+      "price",
+    ];
+
+    // Vendor hatao, order lagao
+    const filtered = data.filter.options
+      .filter((f) => f.filterType !== "vendor") // vendor hatao
+      .sort((a, b) => {
+        const ai = FILTER_ORDER.indexOf(a.filterType);
+        const bi = FILTER_ORDER.indexOf(b.filterType);
+        // agar order mein nahi hai toh end mein dalo
+        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      });
+
+    renderSidebarFilters(filtered);
+
+    if (!mobileSidebarReady) {
+      setupMobileSidebar();
+      mobileSidebarReady = true;
+    }
+  }
 
   renderProductsCollectionPage(FILTERED_PRODUCTS);
   renderPaginationControls();
@@ -210,6 +251,7 @@ function buildBoostParams(query) {
   params.set("shop", "avengers-playground.myshopify.com");
   params.set("limit", String(productsPerPage));
   params.set("page", String(currentPage));
+  params.set("build_filter_tree", "true");
 
   ACTIVE_FILTERS.sizes.forEach((size) => params.append("pf_opt_size[]", size));
 
@@ -220,7 +262,10 @@ function buildBoostParams(query) {
     params.append("pf_pt_product_type[]", type),
   );
 
-  if (ACTIVE_FILTERS.minPrice > 0 || ACTIVE_FILTERS.maxPrice < 15000) {
+  if (
+    ACTIVE_FILTERS.minPrice > PRICE_MIN_DEFAULT ||
+    ACTIVE_FILTERS.maxPrice < PRICE_MAX_DEFAULT
+  ) {
     params.append(
       "pf_p_price[]",
       `${Math.round(ACTIVE_FILTERS.minPrice)}:${Math.round(ACTIVE_FILTERS.maxPrice)}`,
@@ -228,9 +273,9 @@ function buildBoostParams(query) {
   }
 
   if (ACTIVE_FILTERS.inStock && !ACTIVE_FILTERS.outOfStock) {
-    params.append("pf_st_available[]", "true");
+    params.append("pf_st_stock_status[]", "true");
   } else if (ACTIVE_FILTERS.outOfStock && !ACTIVE_FILTERS.inStock) {
-    params.append("pf_st_available[]", "false");
+    params.append("pf_st_stock_status[]", "false");
   }
 
   if (ACTIVE_FILTERS.gender && ACTIVE_FILTERS.gender !== "all") {
@@ -272,9 +317,9 @@ function updateURL() {
 
   // Availability
   if (ACTIVE_FILTERS.inStock && !ACTIVE_FILTERS.outOfStock) {
-    newParams.set("pf_st_available", "true");
+    newParams.append("pf_st_stock_status[]", "true");
   } else if (ACTIVE_FILTERS.outOfStock && !ACTIVE_FILTERS.inStock) {
-    newParams.set("pf_st_available", "false");
+    newParams.append("pf_st_stock_status[]", "false");
   }
 
   // Gender
@@ -547,7 +592,10 @@ function renderActiveFilters() {
   if (ACTIVE_FILTERS.inStock) {
     addChip("Stock", "In Stock", () => {
       ACTIVE_FILTERS.inStock = false;
-      document.querySelector('input[name="instock"]').checked = false;
+      // ← name="instock" nahi, dynamic checkbox dhundho
+      document.querySelectorAll(".dynamic-filter-checkbox").forEach((cb) => {
+        if (cb.value === "in-stock") cb.checked = false;
+      });
       applyFilters();
     });
   }
@@ -555,7 +603,9 @@ function renderActiveFilters() {
   if (ACTIVE_FILTERS.outOfStock) {
     addChip("Stock", "Out of Stock", () => {
       ACTIVE_FILTERS.outOfStock = false;
-      document.querySelector('input[name="outofstock"]').checked = false;
+      document.querySelectorAll(".dynamic-filter-checkbox").forEach((cb) => {
+        if (cb.value === "out-of-stock") cb.checked = false;
+      });
       applyFilters();
     });
   }
@@ -603,19 +653,20 @@ function renderActiveFilters() {
   });
 
   // Price
-  if (ACTIVE_FILTERS.minPrice > 0 || ACTIVE_FILTERS.maxPrice < 15000) {
+  if (
+    ACTIVE_FILTERS.minPrice > PRICE_MIN_DEFAULT ||
+    ACTIVE_FILTERS.maxPrice < PRICE_MAX_DEFAULT
+  ) {
     addChip(
       "Price",
       `₹${ACTIVE_FILTERS.minPrice} - ₹${ACTIVE_FILTERS.maxPrice}`,
       () => {
-        ACTIVE_FILTERS.minPrice = 0;
-        ACTIVE_FILTERS.maxPrice = 15000;
-        //ui reset
+        ACTIVE_FILTERS.minPrice = PRICE_MIN_DEFAULT;
+        ACTIVE_FILTERS.maxPrice = PRICE_MAX_DEFAULT;
         document.querySelector("#min-price-box").value = "";
         document.querySelector("#max-price-box").value = "";
-
         // range slider reset
-        document.querySelector(".pg-range").value = 15000;
+        document.querySelector(".pg-range").value = PRICE_MAX_DEFAULT;
 
         applyFilters();
       },
@@ -652,8 +703,9 @@ function updateSelectedFilterCounts() {
     let count = 0;
 
     switch (type) {
-      case "gender":
-        count = ACTIVE_FILTERS.gender ? 1 : 0;
+      case "tag": // ← gender
+      case "price": // ← price
+        count = 0; // force zero — badge kabhi nahi aayega
         break;
 
       case "availability":
@@ -677,6 +729,7 @@ function updateSelectedFilterCounts() {
 
     if (badge) {
       badge.textContent = count;
+      badge.setAttribute("data-count", count);
       badge.style.display = "inline-flex";
     }
   });
@@ -810,3 +863,336 @@ crossSvg.addEventListener("click", () => {
     sidebar.classList.remove("closing");
   }, 400);
 });
+
+function showFilterSkeleton() {
+  const sidebar = document.querySelector(".pg-sidebar-content");
+  sidebar.innerHTML = "";
+  for (let i = 0; i < 5; i++) {
+    sidebar.innerHTML += `
+      <div class="pg-filter" style="padding: 12px 0; border-bottom: 1px solid #eee;">
+        <div class="skeleton-text" style="width:60%;height:16px;margin-bottom:10px;border-radius:4px;background:#e0e0e0;animation:shimmer 1.2s infinite"></div>
+        <div class="skeleton-text" style="width:45%;height:12px;margin:6px 0;border-radius:4px;background:#e0e0e0;animation:shimmer 1.2s infinite"></div>
+        <div class="skeleton-text" style="width:50%;height:12px;margin:6px 0;border-radius:4px;background:#e0e0e0;animation:shimmer 1.2s infinite"></div>
+      </div>
+    `;
+  }
+}
+
+function renderSidebarFilters(filters) {
+  const sidebar = document.querySelector(".pg-sidebar-content");
+  sidebar.innerHTML = "";
+
+  filters.forEach((filter) => {
+    const filterEl = document.createElement("div");
+    filterEl.classList.add("pg-filter");
+    filterEl.dataset.filter = filter.filterType;
+
+    let bodyHTML = "";
+
+    if (filter.filterType === "price") {
+      const maxVal = Math.round(filter.values?.max || 15000);
+      const minVal = Math.round(filter.values?.min || 0);
+
+      PRICE_MAX_DEFAULT = maxVal;
+      PRICE_MIN_DEFAULT = minVal;
+
+      // ← Current active filter values use karo placeholder ki jagah
+      const currentMin = ACTIVE_FILTERS.minPrice || minVal;
+      const currentMax = ACTIVE_FILTERS.maxPrice || maxVal;
+
+      bodyHTML = `
+    <input type="range" min="${minVal}" max="${maxVal}" 
+      value="${currentMax}" 
+      class="pg-range" data-max="${maxVal}">
+    <div class="pg-price-inputs">
+      <input type="number" id="min-price-box" 
+        value="${currentMin > 0 ? currentMin : ""}"
+        placeholder="₹ ${minVal}">
+      <div class="minus"></div>
+      <input type="number" id="max-price-box" 
+        value="${currentMax < maxVal ? currentMax : ""}"
+        placeholder="₹ ${maxVal}">
+    </div>
+  `;
+    } else if (filter.filterType === "opt_color") {
+      bodyHTML = `<div class="pg-colors">`;
+      (filter.values || []).forEach((val) => {
+        const colorKey = val.key; // original — data-color ke liye
+        const colorCSS = val.key.toLowerCase(); // CSS ke liye lowercase
+
+        // Active check
+        const isActive = ACTIVE_FILTERS.color === colorKey ? "active" : "";
+
+        bodyHTML += `
+      <div>
+        <span class="color-bar ${isActive}" data-color="${colorKey}" style="background-color:${colorCSS}"></span>
+        <span class="color-text">${val.key}</span>
+      </div>`;
+      });
+      bodyHTML += `</div>`;
+    } else if (filter.filterType === "tag") {
+      filterEl.id = "genderBtn";
+      // Gender radios
+      bodyHTML += `<label><input type="radio" name="gender" value="all" ${ACTIVE_FILTERS.gender === "all" ? "checked" : ""}> <span class="pg-option">All</span></label>`;
+      (filter.values || []).forEach((val) => {
+        bodyHTML += `
+          <label>
+            <input type="radio" name="gender" value="${val.key.toLowerCase()}" ${ACTIVE_FILTERS.gender === val.key.toLowerCase() ? "checked" : ""}>
+            <span class="pg-option">${val.key} (${val.doc_count})</span>
+          </label>`;
+      });
+    } else if (filter.filterType === "stock") {
+      (filter.values || []).forEach((val) => {
+        const isInStock = val.key === "in-stock";
+        const isChecked = isInStock
+          ? ACTIVE_FILTERS.inStock
+          : ACTIVE_FILTERS.outOfStock;
+        bodyHTML += `
+          <label>
+            <input type="checkbox"
+              class="dynamic-filter-checkbox"
+              value="${val.key}"
+              data-filter-type="stock"
+              ${isChecked ? "checked" : ""}>
+            <span class="pg-option">${val.label || val.key} (${val.doc_count})</span>
+          </label>`;
+      });
+    } else {
+      // opt_size, product_type, vendor etc — checkboxes
+      (filter.values || []).forEach((val) => {
+        const isChecked =
+          filter.filterType === "opt_size"
+            ? ACTIVE_FILTERS.sizes.includes(val.key)
+            : ACTIVE_FILTERS.productType.includes(val.key);
+
+        bodyHTML += `
+          <label>
+            <input type="checkbox"
+              class="dynamic-filter-checkbox"
+              value="${val.key}"
+              data-filter-type="${filter.filterType}"
+              ${isChecked ? "checked" : ""}>
+            <span class="pg-option">${val.key} (${val.doc_count})</span>
+          </label>`;
+      });
+    }
+
+    // Label override
+    const displayLabel = filter.filterType === "tag" ? "Gender" : filter.label;
+
+    filterEl.innerHTML = `
+  <div class="pg-filter-header">
+    <div class="filter-box">
+      ${displayLabel}   <!-- filter.label ki jagah displayLabel -->
+      <span class="pg-filter-count"></span>
+    </div>
+    <span>${ARROW_ICON}</span>
+  </div>
+  <div class="pg-filter-body">${bodyHTML}</div>
+`;
+
+    sidebar.appendChild(filterEl);
+  });
+
+  attachFilterEvents();
+  setupPriceEvents();
+}
+
+function attachFilterEvents() {
+  // Accordion toggle
+  document.querySelectorAll(".pg-filter-header").forEach((header) => {
+    const body = header.nextElementSibling;
+    const filterType = header.closest(".pg-filter")?.dataset.filter;
+
+    // Check karo kya is filter mein koi active value hai
+    const isActive =
+      (filterType === "tag" &&
+        ACTIVE_FILTERS.gender &&
+        ACTIVE_FILTERS.gender !== "all") ||
+      (filterType === "stock" &&
+        (ACTIVE_FILTERS.inStock || ACTIVE_FILTERS.outOfStock)) ||
+      (filterType === "product_type" &&
+        ACTIVE_FILTERS.productType.length > 0) ||
+      (filterType === "opt_size" && ACTIVE_FILTERS.sizes.length > 0) ||
+      (filterType === "opt_color" && ACTIVE_FILTERS.color) ||
+      (filterType === "price" &&
+        (ACTIVE_FILTERS.minPrice > PRICE_MIN_DEFAULT ||
+          ACTIVE_FILTERS.maxPrice < PRICE_MAX_DEFAULT));
+
+    // Active hai toh open rakho, warna close
+    if (isActive) {
+      body.style.display = "block";
+      // closed class nahi lagao
+    } else {
+      body.style.display = "none";
+      header.classList.add("closed");
+    }
+
+    header.addEventListener("click", () => {
+      const isOpen = body.style.display === "none";
+      body.style.display = isOpen ? "block" : "none";
+      header.classList.toggle("closed", !isOpen);
+    });
+  });
+  // Gender radios
+  document.querySelectorAll('input[name="gender"]').forEach((input) => {
+    input.addEventListener("change", (e) => {
+      const val = e.target.value.toLowerCase();
+      if (IS_MOBILE) {
+        TEMP_FILTERS.gender = val;
+        // ← Mobile pe bhi directly apply karo gender
+        ACTIVE_FILTERS.gender = val;
+        applyFilters();
+      } else {
+        ACTIVE_FILTERS.gender = val;
+        applyFilters();
+      }
+    });
+  });
+
+  // All dynamic checkboxes (size, product_type, stock)
+  document.querySelectorAll(".dynamic-filter-checkbox").forEach((cb) => {
+    cb.addEventListener("change", (e) => {
+      const type = e.target.dataset.filterType;
+      const val = e.target.value;
+      const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
+
+      if (type === "opt_size") {
+        if (e.target.checked) target.sizes.push(val);
+        else target.sizes = target.sizes.filter((s) => s !== val);
+      } else if (type === "product_type") {
+        if (e.target.checked) target.productType.push(val);
+        else target.productType = target.productType.filter((t) => t !== val);
+      } else if (type === "stock") {
+        if (val === "in-stock") target.inStock = e.target.checked;
+        if (val === "out-of-stock") target.outOfStock = e.target.checked;
+      }
+
+      if (!IS_MOBILE) applyFilters();
+    });
+  });
+
+  // Color swatches
+  document.querySelectorAll(".color-bar").forEach((bar) => {
+    bar.addEventListener("click", () => {
+      const isActive = bar.classList.contains("active");
+      document
+        .querySelectorAll(".color-bar")
+        .forEach((b) => b.classList.remove("active"));
+      const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
+      if (!isActive) {
+        bar.classList.add("active");
+        target.color = bar.dataset.color;
+      } else target.color = null;
+      if (!IS_MOBILE) applyFilters();
+    });
+  });
+}
+
+function setupMobileSidebar() {
+  const sidebar = document.querySelector(".pg-sidebar");
+  const overlay = document.querySelector(".pg-overlay");
+  const filterBtn = document.getElementById("mobileFilter");
+  const genderFilterBtn = document.getElementById("genderFilter");
+  const mobileBar = document.querySelector(".pg-mobile-bar");
+  const bottomBtns = document.querySelector(".bottom-btns");
+  const headingFilter = document.querySelector(".headingF");
+
+  if (!sidebar || !filterBtn) return;
+
+  filterBtn.addEventListener("click", () => {
+    const allFilters = document.querySelectorAll(".pg-filter");
+    const genderFilter = document.getElementById("genderBtn");
+
+    allFilters.forEach((f) => f.classList.remove("hidden"));
+    bottomBtns.style.display = "flex";
+    headingFilter.textContent = "Filters";
+    if (genderFilter) genderFilter.classList.remove("hidden");
+
+    sidebar.classList.remove("closing");
+    sidebar.classList.add("open", "full");
+    sidebar.classList.remove("half");
+    overlay.classList.add("active");
+    mobileBar.style.display = "none";
+  });
+
+  genderFilterBtn.addEventListener("click", () => {
+    TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
+
+    const allFilters = document.querySelectorAll(".pg-filter");
+    const genderFilter = document.getElementById("genderBtn");
+
+    allFilters.forEach((f) => f.classList.add("hidden"));
+    if (genderFilter) {
+      genderFilter.classList.remove("hidden");
+      genderFilter.classList.add("no-border");
+      // header hide karo gender ke andar
+      const gHead = genderFilter.querySelector(".pg-filter-header");
+      if (gHead) gHead.classList.add("hidee");
+    }
+
+    headingFilter.textContent = "GENDER";
+    sidebar.classList.add("half", "open");
+    sidebar.classList.remove("full", "closing");
+    overlay.classList.add("active");
+    mobileBar.style.display = "none";
+    bottomBtns.style.display = "none";
+  });
+
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    sidebar.classList.add("closing");
+    overlay.classList.remove("active");
+    mobileBar.style.display = "flex";
+    setTimeout(() => sidebar.classList.remove("closing"), 400);
+  });
+
+  // Cross button
+  const crossSvg = document.querySelector(".filter-heading-mobile svg");
+  if (crossSvg) {
+    crossSvg.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      sidebar.classList.add("closing");
+      overlay.classList.remove("active");
+      mobileBar.style.display = "flex";
+      setTimeout(() => sidebar.classList.remove("closing"), 400);
+    });
+  }
+}
+
+// priceEventsReady = false; ← YE GLOBAL VARIABLE HATA DO
+
+function setupPriceEvents() {
+  // sidebar-content nahi, pg-sidebar pe lagao jo stable hai
+  const sidebar = document.querySelector(".pg-sidebar");
+  if (!sidebar || sidebar._priceEventsAttached) return;
+  sidebar._priceEventsAttached = true; // DOM property se track karo
+
+  sidebar.addEventListener("input", (e) => {
+    if (e.target.classList.contains("pg-range")) {
+      const val = parseFloat(e.target.value);
+      const maxBox = document.querySelector("#max-price-box");
+      if (maxBox) maxBox.value = val;
+      const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
+      target.maxPrice = val;
+      if (!IS_MOBILE) applyFilters();
+    }
+  });
+
+  sidebar.addEventListener("change", (e) => {
+    if (e.target.id === "min-price-box") {
+      const val = parseFloat(e.target.value) || 0;
+      const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
+      target.minPrice = val;
+      if (!IS_MOBILE) applyFilters();
+    }
+    if (e.target.id === "max-price-box") {
+      const val = parseFloat(e.target.value) || PRICE_MAX_DEFAULT;
+      const range = document.querySelector(".pg-range");
+      if (range) range.value = val;
+      const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
+      target.maxPrice = val;
+      if (!IS_MOBILE) applyFilters();
+    }
+  });
+}

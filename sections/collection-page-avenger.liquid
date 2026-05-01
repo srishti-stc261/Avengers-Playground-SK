@@ -4,7 +4,7 @@
     <div class="filter-heading-mobile">
       <span class="headingF">Filters</span> <span>{{ 'filter-cross.svg' | inline_asset_content }}</span>
     </div>
-    <div class="pg-sidebar-content">
+    {% comment %} <div class="pg-sidebar-content">
       <!-- Gender -->
       <div class="pg-filter" data-filter="gender" id="genderBtn">
         <div class="pg-filter-header" id="gender-head">
@@ -133,7 +133,11 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> {% endcomment %}
+
+
+ <div class="pg-sidebar-content"></div>
+
     <div class="bottom-btns">
       <button class="pg-clear-btn">REMOVE ALL FILTERS</button>
       <button class="pg-apply-btn">APPLY FILTERS</button>
@@ -157,7 +161,9 @@
 <link rel="stylesheet" href="{{ 'collection-page-avenger.css' | asset_url }}">
 <script src="{{ 'collection-page-avenger.js' | asset_url }}" defer></script>
 <script src="{{ 'product-card-avenger.js' | asset_url }}" defer></script>
-
+<template id="arrow-icon-tpl">
+  {{ 'down-arrow-av.svg' | inline_asset_content }}
+</template>
 {% schema %}
 {
   "name": "CollectionPage Avengers",

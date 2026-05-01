@@ -101,6 +101,7 @@
   line-height: 150%;
   letter-spacing: 0%;
   color: rgba(0, 0, 0, 1);
+  white-space: nowrap;
 }
 .pg-colors div .color-bar.black {
   background: black;
@@ -560,4 +561,21 @@ product-card-avenger .op-card__traingle {
   .pg-range {
     width: 98%;
   }
+}
+
+.pg-filter-header span svg {
+  transition: transform 0.3s ease;
+}
+
+.pg-filter-header.closed span svg {
+  transform: rotate(180deg);
+}
+
+.pg-filter-count {
+  display: none !important;
+}
+
+.pg-filter-header:not(.closed)
+  .pg-filter-count[data-count]:not([data-count="0"]) {
+  display: inline-flex !important;
 }
