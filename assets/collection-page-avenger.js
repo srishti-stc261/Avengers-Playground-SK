@@ -733,7 +733,7 @@ function renderSidebarFilters(filters) {
               value="${val.key}"
               data-filter-type="stock"
               ${isChecked ? "checked" : ""}>
-            <span class="pg-option">${val.label || val.key} (${val.doc_count})</span>
+            <span class="pg-option">${val.label || val.key} ${val.doc_count ? `(${val.doc_count})` : "(0)"}</span>
           </label>`;
       });
     } else {
