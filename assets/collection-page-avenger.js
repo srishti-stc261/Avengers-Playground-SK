@@ -593,8 +593,8 @@ document.querySelector(".pg-clear-btn").addEventListener("click", () => {
     outOfStock: false,
     sizes: [],
     color: null,
-    minPrice: 0,
-    maxPrice: 15000,
+    minPrice: PRICE_MIN_DEFAULT,
+    maxPrice: PRICE_MAX_DEFAULT,
   };
 
   ACTIVE_FILTERS = JSON.parse(JSON.stringify(TEMP_FILTERS));
@@ -671,8 +671,13 @@ function renderSidebarFilters(filters) {
       PRICE_MAX_DEFAULT = maxVal;
       PRICE_MIN_DEFAULT = minVal;
 
-      const currentMin = ACTIVE_FILTERS.minPrice || minVal;
-      const currentMax = ACTIVE_FILTERS.maxPrice || maxVal;
+      if (ACTIVE_FILTERS.minPrice === 0) ACTIVE_FILTERS.minPrice = minVal;
+      if (ACTIVE_FILTERS.maxPrice === 15000) ACTIVE_FILTERS.maxPrice = maxVal;
+
+      const currentMin =
+        ACTIVE_FILTERS.minPrice != null ? ACTIVE_FILTERS.minPrice : minVal;
+      const currentMax =
+        ACTIVE_FILTERS.maxPrice != null ? ACTIVE_FILTERS.maxPrice : maxVal;
 
       bodyHTML = `
     <input type="range" min="${minVal}" max="${maxVal}" 
