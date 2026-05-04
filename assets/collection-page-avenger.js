@@ -173,9 +173,18 @@ function showSkeleton() {
 }
 
 async function applyFilters(resetPage = true) {
+  const minBox = document.querySelector("#min-price-box");
+  const maxBox = document.querySelector("#max-price-box");
+  if (minBox && minBox.value !== "") {
+    ACTIVE_FILTERS.minPrice = parseFloat(minBox.value) || PRICE_MIN_DEFAULT;
+  }
+  if (maxBox && maxBox.value !== "") {
+    ACTIVE_FILTERS.maxPrice = parseFloat(maxBox.value) || PRICE_MAX_DEFAULT;
+  }
+
   if (resetPage) currentPage = 1;
   showSkeleton();
-  showFilterSkeleton(); // ← filter skeleton bhi dikhao
+  showFilterSkeleton();
   updateURL();
 
   const query = new URLSearchParams(window.location.search).get("q") || "";
@@ -192,9 +201,7 @@ async function applyFilters(resetPage = true) {
     data.total_product || data.total || data.products?.length || 0;
   FILTERED_PRODUCTS = data.products || [];
 
-  // ← YE ADD KAR — filter tree bhi aa gaya same response mein
   if (data.filter && data.filter.options) {
-    // Ye order define karo
     const FILTER_ORDER = [
       "tag",
       "stock",
@@ -204,22 +211,16 @@ async function applyFilters(resetPage = true) {
       "price",
     ];
 
-    // Vendor hatao, order lagao
     const filtered = data.filter.options
-      .filter((f) => f.filterType !== "vendor") // vendor hatao
+      .filter((f) => f.filterType !== "vendor")
       .sort((a, b) => {
         const ai = FILTER_ORDER.indexOf(a.filterType);
         const bi = FILTER_ORDER.indexOf(b.filterType);
-        // agar order mein nahi hai toh end mein dalo
         return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
       });
 
     renderSidebarFilters(filtered);
-
-    if (!mobileSidebarReady) {
-      setupMobileSidebar();
-      mobileSidebarReady = true;
-    }
+    setupMobileSidebar();
   }
 
   renderProductsCollectionPage(FILTERED_PRODUCTS);
@@ -411,170 +412,6 @@ function renderPaginationControls() {
   });
 }
 
-document.querySelectorAll('input[name="gender"]').forEach((input) => {
-  input.addEventListener("change", (e) => {
-    const value = e.target.value.toLowerCase();
-
-    ACTIVE_FILTERS.gender = value;
-    console.log("Gender Filter Applied desktop:", ACTIVE_FILTERS.gender);
-    applyFilters();
-  });
-});
-
-document.querySelectorAll('input[name="instock"]').forEach((input) => {
-  input.addEventListener("change", (e) => {
-    if (IS_MOBILE) {
-      TEMP_FILTERS.inStock = e.target.checked;
-      console.log("In Stock Filter Applied mobile:", TEMP_FILTERS.inStock);
-    } else {
-      ACTIVE_FILTERS.inStock = e.target.checked;
-      applyFilters();
-    }
-  });
-});
-
-document.querySelectorAll('input[name="outofstock"]').forEach((input) => {
-  input.addEventListener("change", (e) => {
-    if (IS_MOBILE) {
-      TEMP_FILTERS.outOfStock = e.target.checked;
-      console.log(
-        "Out of Stock Filter Applied mobile:",
-        TEMP_FILTERS.outOfStock,
-      );
-    } else {
-      ACTIVE_FILTERS.outOfStock = e.target.checked;
-      applyFilters();
-    }
-  });
-});
-
-document.querySelectorAll(".size-checkbox").forEach((checkbox) => {
-  checkbox.addEventListener("change", (e) => {
-    const val = e.target.value;
-
-    if (IS_MOBILE) {
-      if (e.target.checked) {
-        TEMP_FILTERS.sizes.push(val);
-      } else {
-        TEMP_FILTERS.sizes = TEMP_FILTERS.sizes.filter((s) => s !== val);
-      }
-
-      console.log("TEMP Sizes:", TEMP_FILTERS.sizes);
-    } else {
-      if (e.target.checked) {
-        ACTIVE_FILTERS.sizes.push(val);
-      } else {
-        ACTIVE_FILTERS.sizes = ACTIVE_FILTERS.sizes.filter((s) => s !== val);
-      }
-
-      console.log("ACTIVE Sizes:", ACTIVE_FILTERS.sizes);
-      applyFilters();
-    }
-  });
-});
-
-const colorBars = document.querySelectorAll(".color-bar");
-
-colorBars.forEach((bar) => {
-  bar.addEventListener("click", () => {
-    const isAlreadyActive = bar.classList.contains("active");
-    const selectedColor = bar.getAttribute("data-color");
-
-    colorBars.forEach((b) => b.classList.remove("active"));
-
-    if (!isAlreadyActive) {
-      bar.classList.add("active");
-
-      if (IS_MOBILE) {
-        TEMP_FILTERS.color = selectedColor;
-      } else {
-        ACTIVE_FILTERS.color = selectedColor;
-        applyFilters();
-      }
-    } else {
-      if (IS_MOBILE) {
-        TEMP_FILTERS.color = null;
-      } else {
-        ACTIVE_FILTERS.color = null;
-        applyFilters();
-      }
-    }
-  });
-});
-
-const priceRange = document.querySelector(".pg-range");
-const minPriceInput = document.querySelector(
-  ".pg-price-inputs input:first-child",
-);
-const maxPriceInput = document.querySelector(
-  ".pg-price-inputs input:last-child",
-);
-
-// on change of slider
-priceRange?.addEventListener("input", (e) => {
-  const val = parseFloat(e.target.value);
-  maxPriceInput.value = val;
-
-  if (IS_MOBILE) {
-    TEMP_FILTERS.maxPrice = val;
-  } else {
-    ACTIVE_FILTERS.maxPrice = val;
-    applyFilters();
-  }
-});
-
-minPriceInput?.addEventListener("change", (e) => {
-  const val = parseFloat(e.target.value) || 0;
-
-  if (IS_MOBILE) {
-    TEMP_FILTERS.minPrice = val;
-  } else {
-    ACTIVE_FILTERS.minPrice = val;
-    applyFilters();
-  }
-});
-
-maxPriceInput?.addEventListener("change", (e) => {
-  const val = parseFloat(e.target.value) || 15000;
-  priceRange.value = val;
-
-  if (IS_MOBILE) {
-    TEMP_FILTERS.maxPrice = val;
-  } else {
-    ACTIVE_FILTERS.maxPrice = val;
-    applyFilters();
-  }
-});
-
-document.querySelectorAll(".product-type-checkbox").forEach((checkbox) => {
-  checkbox.addEventListener("change", (e) => {
-    const val = e.target.value.toLowerCase();
-
-    if (IS_MOBILE) {
-      if (e.target.checked) {
-        TEMP_FILTERS.productType.push(val);
-      } else {
-        TEMP_FILTERS.productType = TEMP_FILTERS.productType.filter(
-          (t) => t !== val,
-        );
-      }
-
-      console.log("TEMP Product Types:", TEMP_FILTERS.productType);
-    } else {
-      if (e.target.checked) {
-        ACTIVE_FILTERS.productType.push(val);
-      } else {
-        ACTIVE_FILTERS.productType = ACTIVE_FILTERS.productType.filter(
-          (t) => t !== val,
-        );
-      }
-
-      console.log("ACTIVE Product Types:", ACTIVE_FILTERS.productType);
-      applyFilters();
-    }
-  });
-});
-
 function renderActiveFilters() {
   const container = document.querySelector(".pg-active-filters");
   container.innerHTML = "";
@@ -592,7 +429,6 @@ function renderActiveFilters() {
   if (ACTIVE_FILTERS.inStock) {
     addChip("Stock", "In Stock", () => {
       ACTIVE_FILTERS.inStock = false;
-      // ← name="instock" nahi, dynamic checkbox dhundho
       document.querySelectorAll(".dynamic-filter-checkbox").forEach((cb) => {
         if (cb.value === "in-stock") cb.checked = false;
       });
@@ -703,9 +539,9 @@ function updateSelectedFilterCounts() {
     let count = 0;
 
     switch (type) {
-      case "tag": // ← gender
-      case "price": // ← price
-        count = 0; // force zero — badge kabhi nahi aayega
+      case "tag": // gender
+      case "price": // price
+        count = 0;
         break;
 
       case "availability":
@@ -737,67 +573,6 @@ function updateSelectedFilterCounts() {
 
 window.addEventListener("resize", () => {
   IS_MOBILE = window.innerWidth <= 428;
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.querySelector(".pg-sidebar");
-  const overlay = document.querySelector(".pg-overlay");
-  const filterBtn = document.getElementById("mobileFilter");
-  const genderFilterBtn = document.getElementById("genderFilter");
-  const mobileBar = document.querySelector(".pg-mobile-bar");
-  const gender = document.getElementById("genderBtn");
-  const allFilters = document.querySelectorAll(".pg-filter");
-  const bottomBtns = document.querySelector(".bottom-btns");
-  const genderHead = document.getElementById("gender-head");
-  const headingFilter = document.querySelector(".headingF");
-
-  if (!sidebar || !filterBtn) return;
-
-  // OPEN
-  filterBtn.addEventListener("click", () => {
-    allFilters.forEach((f) => f.classList.remove("hidden"));
-    bottomBtns.style.display = "flex";
-    headingFilter.textContent = "Filters";
-    gender.classList.add("hidden");
-
-    sidebar.classList.remove("closing");
-    sidebar.classList.add("open");
-    sidebar.classList.add("full");
-    sidebar.classList.remove("half");
-
-    overlay.classList.add("active");
-    mobileBar.style.display = "none";
-  });
-
-  genderFilterBtn.addEventListener("click", () => {
-    TEMP_FILTERS = JSON.parse(JSON.stringify(ACTIVE_FILTERS));
-
-    allFilters.forEach((f) => f.classList.add("hidden"));
-    gender.classList.remove("hidden");
-    sidebar.classList.add("half");
-    sidebar.classList.remove("full");
-    sidebar.classList.remove("closing");
-    sidebar.classList.add("open");
-    gender.classList.add("no-border");
-    genderHead.classList.add("hidee");
-    headingFilter.textContent = "GENDER";
-    overlay.classList.add("active");
-    mobileBar.style.display = "none";
-    bottomBtns.style.display = "none";
-  });
-
-  // CLOSE
-  overlay.addEventListener("click", () => {
-    sidebar.classList.remove("open");
-    sidebar.classList.add("closing");
-
-    overlay.classList.remove("active");
-    mobileBar.style.display = "flex";
-
-    setTimeout(() => {
-      sidebar.classList.remove("closing");
-    }, 400);
-  });
 });
 
 document.querySelector(".pg-apply-btn").addEventListener("click", () => {
@@ -896,7 +671,6 @@ function renderSidebarFilters(filters) {
       PRICE_MAX_DEFAULT = maxVal;
       PRICE_MIN_DEFAULT = minVal;
 
-      // ← Current active filter values use karo placeholder ki jagah
       const currentMin = ACTIVE_FILTERS.minPrice || minVal;
       const currentMax = ACTIVE_FILTERS.maxPrice || maxVal;
 
@@ -917,8 +691,8 @@ function renderSidebarFilters(filters) {
     } else if (filter.filterType === "opt_color") {
       bodyHTML = `<div class="pg-colors">`;
       (filter.values || []).forEach((val) => {
-        const colorKey = val.key; // original — data-color ke liye
-        const colorCSS = val.key.toLowerCase(); // CSS ke liye lowercase
+        const colorKey = val.key;
+        const colorCSS = val.key.toLowerCase();
 
         // Active check
         const isActive = ACTIVE_FILTERS.color === colorKey ? "active" : "";
@@ -1004,7 +778,6 @@ function attachFilterEvents() {
     const body = header.nextElementSibling;
     const filterType = header.closest(".pg-filter")?.dataset.filter;
 
-    // Check karo kya is filter mein koi active value hai
     const isActive =
       (filterType === "tag" &&
         ACTIVE_FILTERS.gender &&
@@ -1019,10 +792,8 @@ function attachFilterEvents() {
         (ACTIVE_FILTERS.minPrice > PRICE_MIN_DEFAULT ||
           ACTIVE_FILTERS.maxPrice < PRICE_MAX_DEFAULT));
 
-    // Active hai toh open rakho, warna close
     if (isActive) {
       body.style.display = "block";
-      // closed class nahi lagao
     } else {
       body.style.display = "none";
       header.classList.add("closed");
@@ -1040,7 +811,6 @@ function attachFilterEvents() {
       const val = e.target.value.toLowerCase();
       if (IS_MOBILE) {
         TEMP_FILTERS.gender = val;
-        // ← Mobile pe bhi directly apply karo gender
         ACTIVE_FILTERS.gender = val;
         applyFilters();
       } else {
@@ -1050,7 +820,6 @@ function attachFilterEvents() {
     });
   });
 
-  // All dynamic checkboxes (size, product_type, stock)
   document.querySelectorAll(".dynamic-filter-checkbox").forEach((cb) => {
     cb.addEventListener("change", (e) => {
       const type = e.target.dataset.filterType;
@@ -1099,19 +868,20 @@ function setupMobileSidebar() {
   const headingFilter = document.querySelector(".headingF");
 
   if (!sidebar || !filterBtn) return;
+  if (sidebar._mobileReady) return;
+  sidebar._mobileReady = true;
 
   filterBtn.addEventListener("click", () => {
     const allFilters = document.querySelectorAll(".pg-filter");
     const genderFilter = document.getElementById("genderBtn");
-
     allFilters.forEach((f) => f.classList.remove("hidden"));
+    if (genderFilter) genderFilter.classList.add("hidden");
+
     bottomBtns.style.display = "flex";
     headingFilter.textContent = "Filters";
-    if (genderFilter) genderFilter.classList.remove("hidden");
 
-    sidebar.classList.remove("closing");
+    sidebar.classList.remove("closing", "half");
     sidebar.classList.add("open", "full");
-    sidebar.classList.remove("half");
     overlay.classList.add("active");
     mobileBar.style.display = "none";
   });
@@ -1123,22 +893,27 @@ function setupMobileSidebar() {
     const genderFilter = document.getElementById("genderBtn");
 
     allFilters.forEach((f) => f.classList.add("hidden"));
+
     if (genderFilter) {
       genderFilter.classList.remove("hidden");
       genderFilter.classList.add("no-border");
-      // header hide karo gender ke andar
+
       const gHead = genderFilter.querySelector(".pg-filter-header");
       if (gHead) gHead.classList.add("hidee");
+
+      const gBody = genderFilter.querySelector(".pg-filter-body");
+      if (gBody) gBody.style.display = "block";
     }
 
     headingFilter.textContent = "GENDER";
-    sidebar.classList.add("half", "open");
     sidebar.classList.remove("full", "closing");
+    sidebar.classList.add("half", "open");
     overlay.classList.add("active");
     mobileBar.style.display = "none";
     bottomBtns.style.display = "none";
   });
 
+  // Overlay close
   overlay.addEventListener("click", () => {
     sidebar.classList.remove("open");
     sidebar.classList.add("closing");
@@ -1147,7 +922,7 @@ function setupMobileSidebar() {
     setTimeout(() => sidebar.classList.remove("closing"), 400);
   });
 
-  // Cross button
+  // Cross button close
   const crossSvg = document.querySelector(".filter-heading-mobile svg");
   if (crossSvg) {
     crossSvg.addEventListener("click", () => {
@@ -1160,13 +935,10 @@ function setupMobileSidebar() {
   }
 }
 
-// priceEventsReady = false; ← YE GLOBAL VARIABLE HATA DO
-
 function setupPriceEvents() {
-  // sidebar-content nahi, pg-sidebar pe lagao jo stable hai
   const sidebar = document.querySelector(".pg-sidebar");
   if (!sidebar || sidebar._priceEventsAttached) return;
-  sidebar._priceEventsAttached = true; // DOM property se track karo
+  sidebar._priceEventsAttached = true;
 
   sidebar.addEventListener("input", (e) => {
     if (e.target.classList.contains("pg-range")) {
@@ -1176,6 +948,16 @@ function setupPriceEvents() {
       const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
       target.maxPrice = val;
       if (!IS_MOBILE) applyFilters();
+    }
+  });
+
+  sidebar.addEventListener("input", (e) => {
+    if (e.target.id === "min-price-box") {
+      const val = parseFloat(e.target.value);
+      if (!isNaN(val)) {
+        const target = IS_MOBILE ? TEMP_FILTERS : ACTIVE_FILTERS;
+        target.minPrice = val;
+      }
     }
   });
 
