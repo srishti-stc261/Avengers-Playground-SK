@@ -762,7 +762,7 @@ function renderSidebarFilters(filters) {
     filterEl.innerHTML = `
   <div class="pg-filter-header">
     <div class="filter-box">
-      ${displayLabel}   <!-- filter.label ki jagah displayLabel -->
+      ${displayLabel} 
       <span class="pg-filter-count"></span>
     </div>
     <span>${ARROW_ICON}</span>
