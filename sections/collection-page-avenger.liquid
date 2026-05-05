@@ -13,139 +13,24 @@
     <div class="filter-heading-mobile">
       <span class="headingF">Filters</span> <span>{{ 'filter-cross.svg' | inline_asset_content }}</span>
     </div>
-    {% comment %} <div class="pg-sidebar-content">
-      <!-- Gender -->
-      <div class="pg-filter" data-filter="gender" id="genderBtn">
-        <div class="pg-filter-header" id="gender-head">
-          <div class="filter-box">
-            Gender
-            <span class="pg-filter-count"></span>
-          </div>
-          <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
-        </div>
-        <div class="pg-filter-body">
-          <label><input type="radio" name="gender" value="men"> <span class="pg-option">Men</span></label>
-          <label><input type="radio" name="gender" value="women"> <span class="pg-option">Women</span></label>
-          <label><input type="radio" name="gender" checked value="all"><span class="pg-option">All</span></label>
-          <label><input type="radio" name="gender" value="girl"><span class="pg-option">Girl</span></label>
-        </div>
+ 
+
+
+<div class="pg-sidebar-content">
+  {% for i in (1..5) %}
+    <div class="pg-filter skeleton-filter">
+      <div class="pg-filter-header">
+        <div class="skeleton-text skeleton-title"></div>
       </div>
 
-      <!-- Availability -->
-      <div class="pg-filter" data-filter="availability">
-        <div class="pg-filter-header">
-          <div class="filter-box">
-            Availability
-            <span class="pg-filter-count"></span>
-          </div>
-          <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
-        </div>
-        <div class="pg-filter-body">
-          <label><input type="checkbox" name="instock"> <span class="pg-option stock">In Stock</span></label>
-          <label><input type="checkbox" name="outofstock"><span class="pg-option stock">Out of Stock</span></label>
-        </div>
+      <div class="pg-filter-body">
+        <div class="skeleton-text skeleton-option"></div>
+        <div class="skeleton-text skeleton-option"></div>
+        <div class="skeleton-text skeleton-option"></div>
       </div>
-
-      <!-- Product Type -->
-      <div class="pg-filter" data-filter="productType">
-        <div class="pg-filter-header">
-          <div class="filter-box">
-            Product Type
-            <span class="pg-filter-count"></span>
-          </div>
-          <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
-        </div>
-        <div class="pg-filter-body">
-          <label
-            ><input type="checkbox" class="product-type-checkbox" value="Clothing">
-            <span class="pg-option">Clothing (<span class="pg-count" data-count="Clothing">0</span>)</span></label
-          >
-          <label
-            ><input type="checkbox" class="product-type-checkbox" value="Trouser">
-            <span class="pg-option">Trouser (<span class="pg-count" data-count="Trouser">0</span>)</span></label
-          >
-          <label
-            ><input type="checkbox" class="product-type-checkbox" value="Top">
-            <span class="pg-option">Tops (<span class="pg-count" data-count="Tops">0</span>)</span></label
-          >
-          <label
-            ><input type="checkbox" class="product-type-checkbox" value="T-shirts">
-            <span class="pg-option">T-shirts (<span class="pg-count" data-count="T-shirts">0</span>)</span></label
-          >
-          <label
-            ><input type="checkbox" class="product-type-checkbox" value="Dress">
-            <span class="pg-option">Dresses (<span class="pg-count" data-count="Dress">0</span>)</span></label
-          >
-        </div>
-      </div>
-
-      <!-- Color -->
-      <div class="pg-filter" data-filter="color">
-        <div class="pg-filter-header">
-          <div class="filter-box">
-            Color
-            <span class="pg-filter-count"></span>
-          </div>
-          <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
-        </div>
-        <div class="pg-filter-body">
-          <div class="pg-colors">
-            <div><span class="color-bar black" data-color="black"></span><span class="color-text">Black</span></div>
-            <div><span class="color-bar active" data-color="beige"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar white" data-color="white"></span><span class="color-text">White</span></div>
-            <div><span class="color-bar blue" data-color="blue"></span><span class="color-text">Blue</span></div>
-            <div><span class="color-bar red" data-color="red"></span><span class="color-text">Red</span></div>
-            <div><span class="color-bar brown" data-color="brown"></span><span class="color-text">Brown</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-            <div><span class="color-bar"></span><span class="color-text">Beige</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Size -->
-      <div class="pg-filter" data-filter="size">
-        <div class="pg-filter-header">
-          <div class="filter-box">
-            Size
-            <span class="pg-filter-count"></span>
-          </div>
-          <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
-        </div>
-        <div class="pg-filter-body">
-          <label><input type="checkbox" class="size-checkbox" value="XS"> <span class="pg-option">XS</span></label>
-          <label><input type="checkbox" class="size-checkbox" value="S"> <span class="pg-option">S</span></label>
-          <label><input type="checkbox" class="size-checkbox" value="M"> <span class="pg-option">M</span></label>
-          <label><input type="checkbox" class="size-checkbox" value="L"> <span class="pg-option">L</span></label>
-          <label><input type="checkbox" class="size-checkbox" value="XL"> <span class="pg-option">XL</span></label>
-          <label><input type="checkbox" class="size-checkbox" value="2XL"> <span class="pg-option">2XL</span></label>
-        </div>
-      </div>
-
-      <!-- Price -->
-      <div class="pg-filter" data-filter="price">
-        <div class="pg-filter-header">
-          Price
-          <span>{{ 'down-arrow-av.svg' | inline_asset_content }}</span>
-        </div>
-        <div class="pg-filter-body">
-          <input type="range" min="0" max="15000" value="15000" class="pg-range">
-          <div class="pg-price-inputs">
-            <input type="number" id="min-price-box" placeholder="₹ 0">
-            <div class="minus"></div>
-            <input type="number" id="max-price-box" placeholder="₹ 15000">
-          </div>
-        </div>
-      </div>
-    </div> {% endcomment %}
-
-
- <div class="pg-sidebar-content"></div>
+    </div>
+  {% endfor %}
+</div>
 
     <div class="bottom-btns">
       <button class="pg-clear-btn">REMOVE ALL FILTERS</button>
@@ -156,7 +41,17 @@
   <!-- PRODUCTS -->
   <div class="pg-product-filters">
     <div class="pg-active-filters"></div>
-    <div class="pg-products"></div>
+    <div class="pg-products">
+     
+  {% for i in (1..8) %}
+    <div class="pg-card skeleton-card">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-text"></div>
+      <div class="skeleton-text small"></div>
+    </div>
+  {% endfor %}
+
+    </div>
     <div class="pg-pagination-container"></div>
   </div>
 </section>

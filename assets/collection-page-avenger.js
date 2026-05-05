@@ -1,3 +1,5 @@
+// @ts-ignore
+
 let ALL_PRODUCTS = [];
 let PRICE_MAX_DEFAULT = 15000;
 let PRICE_MIN_DEFAULT = 0;
@@ -154,23 +156,6 @@ function renderProductsCollectionPage(products) {
   });
 }
 
-function showSkeleton() {
-  const grid = document.querySelector(".pg-products");
-  grid.innerHTML = "";
-
-  for (let i = 0; i < 8; i++) {
-    const skeleton = document.createElement("div");
-    skeleton.classList.add("pg-card", "skeleton-card");
-
-    skeleton.innerHTML = `
-      <div class="skeleton-img"></div>
-      <div class="skeleton-text"></div>
-      <div class="skeleton-text small"></div>
-    `;
-
-    grid.appendChild(skeleton);
-  }
-}
 
 async function applyFilters(resetPage = true) {
   const minBox = document.querySelector("#min-price-box");
@@ -183,8 +168,6 @@ async function applyFilters(resetPage = true) {
   }
 
   if (resetPage) currentPage = 1;
-  showSkeleton();
-  showFilterSkeleton();
   updateURL();
 
   const query = new URLSearchParams(window.location.search).get("q") || "";
@@ -639,19 +622,6 @@ crossSvg.addEventListener("click", () => {
   }, 400);
 });
 
-function showFilterSkeleton() {
-  const sidebar = document.querySelector(".pg-sidebar-content");
-  sidebar.innerHTML = "";
-  for (let i = 0; i < 5; i++) {
-    sidebar.innerHTML += `
-      <div class="pg-filter" style="padding: 12px 0; border-bottom: 1px solid #eee;">
-        <div class="skeleton-text" style="width:60%;height:16px;margin-bottom:10px;border-radius:4px;background:#e0e0e0;animation:shimmer 1.2s infinite"></div>
-        <div class="skeleton-text" style="width:45%;height:12px;margin:6px 0;border-radius:4px;background:#e0e0e0;animation:shimmer 1.2s infinite"></div>
-        <div class="skeleton-text" style="width:50%;height:12px;margin:6px 0;border-radius:4px;background:#e0e0e0;animation:shimmer 1.2s infinite"></div>
-      </div>
-    `;
-  }
-}
 
 function renderSidebarFilters(filters) {
   const sidebar = document.querySelector(".pg-sidebar-content");
