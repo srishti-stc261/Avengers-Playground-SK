@@ -202,19 +202,48 @@ product-card-avenger .op-card__traingle {
   top: -41px;
 }
 
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 520px;
+}
+
 .skeleton-img {
-  height: 200px;
-  background: #eee;
-  border-radius: 10px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  background: #ececec;
 }
-.skeleton-text {
-  height: 12px;
-  margin-top: 10px;
-  background: #eee;
+
+.skeleton-content {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.skeleton-text.small {
-  width: 60%;
+
+.skeleton-title {
+  width: 85%;
+  height: 18px;
+  border-radius: 4px;
+  background: #ececec;
 }
+
+.skeleton-price {
+  width: 40%;
+  height: 20px;
+  border-radius: 4px;
+  background: #ececec;
+}
+
+.skeleton-discount {
+  width: 30%;
+  height: 16px;
+  border-radius: 4px;
+  background: #ececec;
+}
+
 .pg-active-filters {
   display: flex;
   gap: 12px;
@@ -296,7 +325,7 @@ product-card-avenger .op-card__traingle {
   background: #f5f3ff;
 }
 .bottom-btns {
-  display: none;
+  opacity: 0;
   gap: 12px;
   justify-content: space-between;
   margin-top: 20px;
@@ -476,6 +505,7 @@ product-card-avenger .op-card__traingle {
   }
   .bottom-btns {
     display: flex;
+    opacity: 1;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -624,4 +654,30 @@ product-card-avenger .op-card__traingle {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.skeleton-filter {
+  border-bottom: 1px solid rgba(235, 235, 235, 1);
+  padding-bottom: 20px;
+}
+
+.skeleton-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+}
+
+.skeleton-filter-title {
+  width: 140px;
+  height: 24px;
+  border-radius: 6px;
+  background: #ececec;
+}
+
+.skeleton-arrow {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #ececec;
 }

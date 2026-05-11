@@ -17,16 +17,14 @@
 
 
 <div class="pg-sidebar-content">
-  {% for i in (1..5) %}
+  {% for i in (1..6) %}
     <div class="pg-filter skeleton-filter">
-      <div class="pg-filter-header">
-        <div class="skeleton-text skeleton-title"></div>
-      </div>
+      <div class="pg-filter-header skeleton-filter-header">
 
-      <div class="pg-filter-body">
-        <div class="skeleton-text skeleton-option"></div>
-        <div class="skeleton-text skeleton-option"></div>
-        <div class="skeleton-text skeleton-option"></div>
+        <div class="skeleton-filter-title"></div>
+
+        <div class="skeleton-arrow"></div>
+
       </div>
     </div>
   {% endfor %}
@@ -44,11 +42,14 @@
     <div class="pg-products">
      
   {% for i in (1..8) %}
-    <div class="pg-card skeleton-card">
-      <div class="skeleton-img"></div>
-      <div class="skeleton-text"></div>
-      <div class="skeleton-text small"></div>
-    </div>
+   <div class="skeleton-card pg-card">
+  <div class="skeleton-img"></div>
+
+  <div class="skeleton-content">
+    <div class="skeleton-title"></div>
+    <div class="skeleton-price"></div>
+  </div>
+</div>
   {% endfor %}
 
     </div>
